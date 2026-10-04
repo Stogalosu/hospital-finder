@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@next/third-parties": "^16.3.8",
+    "@vis.gl/react-google-maps": "^1.10.1",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "lucide-react": "^1.51.0",
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
     "@tailwindcss/postcss": "^4",
+    "@types/google.maps": "^3.66.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
