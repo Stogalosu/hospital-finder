@@ -1,21 +1,22 @@
 from fastapi import FastAPI
-from dataclasses import dataclass
+from pydantic import BaseModel
+from typing import List, Dict, Tuple, Optional
 import json
-from transformers import pipeline
-from typing import List
+import torch
+from sentence_transformers import SentenceTransformer, util
 
-app=FastAPI
+app = FastAPI(title="Hospital Recommendation API")
 
 class Coordinates(BaseModel):
-  latitude: float
-  longitude: float
+    latitude: float
+    longitude: float
 
 class Hospital(BaseModel):
-  id: int
-  name: str
-  type: str
-  coordinates: Coordinates
-  specialties: List[str]
+    id: int
+    name: str
+    type: str
+    coordinates: Coordinates
+    specialties: List[str]
 
 class PatientRequest(BaseModel):
     symptom: str
@@ -23,69 +24,141 @@ class PatientRequest(BaseModel):
     longitude: float
     age: int
 
-classifier = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
+SYMPTOM_MAPPING = {
+    "gastroenterology": ["I feel like throwing up", "nausea", "stomach pain", "diarrhea", "abdominal cramps",
+                         "bloating", "vomiting", "heartburn"],
+    "cardiology": ["chest pain", "heart palpitations", "shortness of breath", "irregular heartbeat",
+                   "tightness in chest", "high blood pressure"],
+    "neurology": ["severe headache", "dizziness", "numbness in limbs", "difficulty speaking", "seizures",
+                  "loss of balance"],
+    "psychiatry": ["feeling depressed", "extreme anxiety", "hallucinations", "panic attack", "insomnia", "mood swings"],
+    "addiction-recovery": ["alcohol withdrawal", "drug addiction", "craving substances", "rehab for drugs",
+                           "drug abuse"],
+    "orthopedics": ["broken bone", "joint pain", "sprained ankle", "bone fracture", "back pain", "knee injury"],
+    "trauma": ["severe injury", "accident", "deep cut", "physical trauma", "crush injury", "car crash"],
+    "pneumology": ["difficulty breathing", "persistent cough", "wheezing", "lung infection", "shortness of breath",
+                   "phthisiology"],
+    "ENT": ["sore throat", "earache", "nasal congestion", "difficulty swallowing", "sinus pain", "hearing loss"],
+    "dermatology": ["skin rash", "itching", "acne", "skin burns", "strange spots on skin", "skin inflammation"],
+    "urology": ["pain during urination", "blood in urine", "bladder pain", "kidney stones", "urinary tract infection"],
+    "nephrology": ["kidney failure", "dialysis needed", "swelling in legs", "protein in urine"],
+    "gynecology": ["pelvic pain", "menstrual problems", "vaginal discharge", "ovary pain"],
+    "obstretics": ["pregnancy complications", "labor pain", "prenatal care", "foetal distress"],
+    "ophthalmology": ["blurry vision", "eye pain", "red eyes", "sudden vision loss", "eye infection"],
+    "infectious-diseases": ["high fever", "chills", "tropical disease", "viral infection", "severe flu", "sepsis"],
+    "emergency-medicine": ["unconscious", "heavy bleeding", "heart attack", "stroke symptoms", "stopped breathing"],
+    "general-surgery": ["appendicitis", "gallbladder pain", "hernia", "need surgical intervention",
+                        "abdominal surgery"],
+    "internal-medicine": ["general malaise", "chronic fatigue", "unexplained weight loss", "systemic illness"]
+}
 
-with open("hospital_list.json","r",encoding="utf8") as f:
-    hospitals = json.load(f)
+TRIAGE_ANCHORS = {
+    "emergency": ["I am having a heart attack", "I cannot breathe", "Severe bleeding from a wound", "I am unconscious"],
+    "medical": ["I have a headache", "My stomach hurts", "I feel feverish", "Sore throat and cough"],
+    "non-medical": ["I am bored", "The weather is nice", "I want to eat pizza", "I am doing my homework"]
+}
 
-unique_specialities=set()
-hospitals_vector: List[Hospital] = []
+class HospitalRecommendationSystem:
+    def __init__(self, json_path: str):
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.hospitals = self._load_hospitals(json_path)
 
-for x in hospitals:
-    coords = Coordinates(
-        latitude=x["coordinates"]["latitude"],
-        longitude=x["coordinates"]["longitude"],
-    )
-    hospital=Hospital(
-        id=x["id"],
-        name=x["name"],
-        type=x["type"],
-        coordinates=coords,
-        specialties=x["specialties"],
-    )
-    hospitals_vector.append(hospital)
-    for spec in x.get("specialties", []):
-        unique_specialities.add(spec.capitalize())
+        self.triage_labels = []
+        self.triage_embeddings = []
+        for label, examples in TRIAGE_ANCHORS.items():
+            for ex in examples:
+                self.triage_labels.append(label)
+                self.triage_embeddings.append(self.model.encode(ex, convert_to_tensor=True))
+        self.triage_embeddings = torch.stack(self.triage_embeddings)
 
-candidate_labels=list(unique_specialities)
-candidate_labels.append("Unrelated to medical symptoms")
+        self.spec_labels = []
+        self.spec_embeddings = []
+        for spec, symptoms in SYMPTOM_MAPPING.items():
+            for sym in symptoms:
+                self.spec_labels.append(spec)
+                self.spec_embeddings.append(self.model.encode(sym, convert_to_tensor=True))
+        self.spec_embeddings = torch.stack(self.spec_embeddings)
+
+    def _load_hospitals(self, path: str) -> List[Hospital]:
+        with open(path, "r", encoding="utf8") as f:
+            data = json.load(f)
+
+        hospitals = []
+        for x in data:
+            h_type = x["type"].replace("peidatric", "pediatric")
+            hospitals.append(Hospital(
+                id=x["id"],
+                name=x["name"],
+                type=h_type,
+                coordinates=Coordinates(x["coordinates"]["latitude"], x["coordinates"]["longitude"]),
+                specialties=x["specialties"]
+            ))
+        return hospitals
+
+    def get_best_match(self, text: str, embeddings: torch.Tensor, labels: List[str]) -> Tuple[str, float]:
+        user_emb = self.model.encode(text, convert_to_tensor=True)
+        cos_scores = util.cos_sim(user_emb, embeddings)[0]
+        best_idx = torch.argmax(cos_scores).item()
+        return labels[best_idx], cos_scores[best_idx].item()
+
+    def recommend(self, user_text: str, lat: float, lon: float, age: int):
+        triage_label, triage_score = self.get_best_match(user_text, self.triage_embeddings, self.triage_labels)
+
+        if triage_label == "non-medical":
+            return {
+                "status": "irrelevant",
+                "triage_label": triage_label,
+                "confidence": triage_score,
+                "message": "Result: No medical hospitalization required."
+            }
+
+        best_spec, spec_score = self.get_best_match(user_text, self.spec_embeddings, self.spec_labels)
+
+        if age >= 18:
+            valid_types = ["mixed", "adult_only"]
+        else:
+            valid_types = ["pediatric_only", "mixed"]
+
+        search_variants = [best_spec]
+        if age < 18:
+            search_variants.append(f"pediatric-{best_spec}")
+            search_variants.append("pediatrics")
+
+        min_dist = float('inf')
+        selected_h = None
+
+        for h in self.hospitals:
+            dist = abs(lat - h.coordinates.latitude) + abs(lon - h.coordinates.longitude)
+            if h.type in valid_types and any(sv in h.specialties for sv in search_variants):
+                if dist < min_dist:
+                    min_dist = dist
+                    selected_h = h
+
+        if selected_h:
+            return {
+                "status": "success",
+                "triage_label": triage_label,
+                "detected_specialty": best_spec,
+                "specialty_score": spec_score,
+                "hospital_id": selected_h.id,
+                "hospital_name": selected_h.name
+            }
+        else:
+            return {
+                "status": "not_found",
+                "triage_label": triage_label,
+                "detected_specialty": best_spec,
+                "message": "Result: No hospital found for this specialty in your area."
+            }
+
+recommender = HospitalRecommendationSystem("hospital_list.json")
+
 @app.post("/recommend-hospital")
-def reccomend_hospital(request: PatientRequest):
-    output = classifier(sequence_to_classify, candidate_labels,hypothesis_template="The patient's condition requires treatment in the {} department.")
-    best_label = output["labels"][0]
-    best_score = output["scores"][0]
-    THRESHOLD = 0.10
-
-    if request.age>=18:
-        valid_types=["mixed","adult_only"]
-    else:
-        valid_types=["pediatric_only","mixed"]
-    if best_label == "Unrelated to medical symptoms" or best_score < THRESHOLD:
-       return{
-            "status": "irrelevant",
-            "messages": "Result: Irrelevant / Not a medical symptom"
-       }
-       matched_speciality = best_label.lower()
-       minimum_distance = 999999
-       selected_id = -1
-       selected_hospital_name = None
-       for hospital in hospitals_vector:
-           distance = abs(x - hospital.coordinates.latitude) + abs(y - hospital.coordinates.longitude)
-           if matched_speciality in hospital.specialties and hospital.type in valid_types :
-               if distance < minimum_distance:
-                   minimum_distance = distance
-                   selected_id = hospital.id
-                   selected_hospital_name = hospital.name
-       if selected_id != -1:
-               return {
-                   "status": "success",
-                   "specialty": best_label,
-                   "score": best_score,
-                   "hospital_id": selected_id,
-                   "hospital_name": selected_hospital_name
-               }
-           else:
-               return {
-                   "status": "not_found",
-                   "message": "No hospital was found."
-               }
+def recommend_endpoint(request: PatientRequest):
+    result = recommender.recommend(
+        user_text=request.symptom,
+        lat=request.latitude,
+        lon=request.longitude,
+        age=request.age
+    )
+    return result
