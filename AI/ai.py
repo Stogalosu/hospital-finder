@@ -50,7 +50,6 @@ for x in hospitals:
 candidate_labels=list(unique_specialities)
 candidate_labels.append("Unrelated to medical symptoms")
 
-sequence_to_classify = "I suffer from severe chest pain."
 def reccomend_hospital(request: PatientRequest):
     output = classifier(sequence_to_classify, candidate_labels,hypothesis_template="The patient's condition requires treatment in the {} department.")
     best_label = output["labels"][0]
