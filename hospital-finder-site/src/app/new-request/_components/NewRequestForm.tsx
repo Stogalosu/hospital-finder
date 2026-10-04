@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { useCallback, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPicker } from "@/components/map-picker";
 
 type LatLng = { lat: number; lng: number };
@@ -16,7 +15,6 @@ const MSG_MISSING = "Please enter a valid address or click a point on the map.";
 const MSG_OUTSIDE = "The location must be inside Bucharest.";
 
 export default function NewRequestForm() {
-    const apiKey: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
 
     const nameRef = useRef<HTMLInputElement>(null);
     const surnameRef = useRef<HTMLInputElement>(null);
@@ -204,14 +202,12 @@ export default function NewRequestForm() {
                     )}
                 </Field>
                 <Field>
-                    <APIProvider apiKey={apiKey} language="en" region="RO">
-                        <MapPicker
-                            position={position}
-                            searchQuery={searchQuery}
-                            onLocationChange={handleLocationChange}
-                            onAddressFromMap={setAddress} // does NOT touch searchQuery
-                        />
-                    </APIProvider>
+                    <MapPicker
+                        position={position}
+                        searchQuery={searchQuery}
+                        onLocationChange={handleLocationChange}
+                        onAddressFromMap={setAddress} // does NOT touch searchQuery
+                    />
                 </Field>
                 <Field className="self-center w-25 pt-6">
                     <Button
