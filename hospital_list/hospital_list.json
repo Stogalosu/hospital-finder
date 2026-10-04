@@ -2,799 +2,429 @@
   {
     "id": 1,
     "name": "Spitalul Clinic de Urgență Floreasca",
+    "address":"Calea Floreasca 8, 014461 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4025,
-      "longitude": 26.1278
+      "latitude": 44.453889,
+      "longitude": 26.101683
     },
     "specialties": [
       "gastroenterology",
       "dermatology",
       "cardiology",
-      "oncology"
+      "oncology",
+      "emergency-medicine",
+      "general-surgery",
+      "orthopedics",
+      "cardiology",
+      "intensive-care",
+      "neurology"
     ]
   },
   {
     "id": 2,
     "name": "Spitalul Universitar de Urgență Militar Central Dr. Carol Davila",
+    "address":"Calea Plevnei 134, 010825 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4276,
-      "longitude": 26.148
+      "latitude": 44.442705,
+      "longitude": 26.073543
     },
     "specialties": [
       "gastroenterology",
       "psychiatry",
       "ophthalmology",
-      "orthopedics"
+      "orthopedics",
+	“general-surgery”,
+	“cardiology”,
+	“oncology”,
+	“neurology”,
+	“urology”,
+	“intensive care”
     ]
   },
   {
     "id": 3,
     "name": "Spitalul Clinic Dr. I. Cantacuzino",
+    "address":"Strada Ion Movilă 5-7, 030167 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4794,
-      "longitude": 26.0563
+      "latitude": 44.444881,
+      "longitude": 26.109866
     },
     "specialties": [
       "gynecology",
       "pneumology",
-      "ENT"
+      "ENT",
+	“general-surgery”,
+	“neonatology”,
+	“internal-medicine”,
+	“rheumatology”,
+	“intensive-care”
+	“oncology”
     ]
   },
   {
     "id": 4,
     "name": "Spitalul Clinic Colentina",
+    "address":"Șoseaua Ștefan cel Mare 19-21, 020125 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4994,
-      "longitude": 26.0427
+      "latitude": 44.453649,
+      "longitude": 26.113952
     },
     "specialties": [
       "psychiatry",
       "orthopedics",
       "neurology",
-      "trauma"
+      "trauma",
+	“dermatology”, 
+	“neurosurgery”,
+	“rheumatology”,
+	“internal-medicine”,
+	“gastroenterology”,
+	“infectious-diseases”,
+	“pediatric-dermatology”,
+	“pediatrics”
     ]
   },
   {
     "id": 5,
     "name": "Spitalul Clinic Filantropia",
+    "address":"Bulevardul Ion Mihalache 11- 13, 011132 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4042,
-      "longitude": 26.0561
+      "latitude": 44.453157,
+      "longitude": 26.082320
     },
     "specialties": [
       "trauma",
       "dermatology",
-      "gastroenterology"
+      "gastroenterology",
+	“obstretics”,
+	“gynecology”,
+	“maternal-fetal-medicine”,
+	“neontology”
     ]
   },
   {
     "id": 6,
     "name": "Spitalul Clinic de Nefrologie Dr. Carol Davila",
+    "address":"Calea Griviței 4, 010731 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4331,
-      "longitude": 26.0358
+      "latitude": 44.444665,
+      "longitude": 26.089776
     },
     "specialties": [
       "trauma",
       "ophthalmology",
       "dermatology",
       "pneumology",
-      "cardiology"
-    ]
+      "cardiology",
+	“nephrology”,
+	“dialysis”,
+	“renal-surgery”,
+	“urology”,
+    “internal-medicine”
+   ]
   },
   {
     "id": 7,
     "name": "Spitalul Clinic de Copii Dr. Victor Gomoiu",
+    "address":"Bulevardul Basarabia 21, 022102 București",
+    "type":"peidatric_only",
     "coordinates": {
-      "latitude": 44.4257,
-      "longitude": 26.0828
+      "latitude": 44.433041,
+      "longitude": 26.142245
     },
     "specialties": [
-      "orthopedics",
-      "gynecology"
+      "pediatric-orthopedics",
+      "pediatric-gynecology",
+	“pediatric-surgery”,
+	“pediatric-neurology”,
+	“pediatric-cardiology”,
+	“pedriatics”,
+	“pedriatic-ENT”,
+	“neonatology”
     ]
   },
   {
     "id": 8,
     "name": "Spitalul Clinic de Urgență pentru Copii Grigore Alexandrescu",
+    "address":"Bulevardul Iancu de Hunedoara 30-32, 011743 București",
+    "type":"pediatric_only",
     "coordinates": {
-      "latitude": 44.4335,
-      "longitude": 26.1274
+      "latitude": 44.452309,
+      "longitude": 26.092762
     },
     "specialties": [
-      "orthopedics",
-      "gastroenterology",
-      "urology",
-      "psychiatry",
-      "gynecology"
+      "pediatric-orthopedics",
+      "pediatric-gastroenterology",
+      "pediatric-urology",
+      "pediatric-psychiatry",
+      "pediatric-gynecology",
+	“pediatric-emergency-medicine”,
+	“pediatric-surgery”,
+	“pediatric-toxicology”,
+	“pediatric-cardiology”,
+	“pediatric-reconstructive-surgery”
     ]
   },
   {
     "id": 9,
     "name": "Spitalul Clinic de Boli Infecțioase și Tropicale Dr. Victor Babeș",
+    "address":"Șoseaua Mihai Bravu 281, 030303 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4669,
-      "longitude": 26.0487
+      "latitude": 44.427742,
+      "longitude": 26.139289
     },
     "specialties": [
       "pneumology",
       "oncology",
-      "gastroenterology"
+      "gastroenterology",
+	“infectious-diseases”,
+	“tropical-diseases”,
+	“intensive-care”,
+	“pediatric-infectious-patology”
     ]
   },
   {
     "id": 10,
     "name": "Institutul Clinic Fundeni",
+    "address":"Fundeni Road No. 258, București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4119,
-      "longitude": 26.1266
+      "latitude": 44.465528,
+      "longitude": 26.156013
     },
     "specialties": [
       "oncology",
       "dermatology",
-      "radiology"
+      "radiology",
+	“pediatric-gastroenterology”,
+	“hepatology”,
+	“pediatric-hematology”,
+	“nephrology”,
+	“kidney-transplation”,
+	“urology”,
+	“pediatrics”,
+	“general-surgery”,
+	“cardiology”
     ]
   },
   {
     "id": 11,
     "name": "Institutul Național de Boli Infecțioase Prof. Dr. Matei Balș",
+    "address":"Strada Doctor Calistrat Grozovici 1, 021105 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4256,
-      "longitude": 26.1199
+      "latitude": 44.455322,
+      "longitude": 26.112561
     },
     "specialties": [
       "pneumology",
       "gastroenterology",
-      "orthopedics"
+      "orthopedics",
+	“infectious-diseases”,
+	“pediatric-infectious-diseases”,
+	“intensive-care”,
+	“pediatric-intensive-care”,
+	“antirabic-center”,
     ]
   },
   {
     "id": 12,
     "name": "Spitalul Clinic Căilor Ferate Witting",
+    "address":"Calea Plevnei 142-144, 010243 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4308,
-      "longitude": 26.1532
+      "latitude": 44.442764,
+      "longitude": 26.071940
     },
     "specialties": [
       "urology",
-      "radiology"
+      "radiology",
+	“internal-medicine”,
+	“general-surgery”,
+	“ophthalmology”,
+	“neurology”,
+	“otolaryngology”,
+	“dermatology”,
+	“gynecology”
     ]
   },
   {
     "id": 13,
     "name": "Spitalul Clinic de Psihiatrie Prof. Dr. Alexandru Obregia",
+    "address":"Șoseaua Berceni 10, 041914 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.3953,
-      "longitude": 26.1565
+      "latitude": 44.387372,
+      "longitude": 26.127129
     },
     "specialties": [
       "trauma",
-      "cardiology"
+      "cardiology",
+	“adult-psychiatry”,
+	“pediatric-psychiatry”,
+	“pediatric-neurology”,
+	“addiction-recovery”
     ]
   },
   {
     "id": 14,
     "name": "Spitalul Clinic Nicolae Malaxa",
+    "address":"Șoseaua Vergului.12 sector 2, cod, Șos. Vergului 12, 022441 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4165,
-      "longitude": 26.1576
+      "latitude": 44.438381,
+      "longitude": 26.178727
     },
     "specialties": [
       "pediatrics",
-      "trauma"
+      "trauma",
+	“metabolic-diseases”,
+	“general-surgery”,
+	“gynecology”,
+	“neonatology”,
+	“internal-medicine”,
+	“pediatric-stomatology”
     ]
   },
   {
     "id": 15,
     "name": "Spitalul Clinic Theodor Burghele",
+    "address":"Șoseaua Panduri 20, 061344 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.3882,
-      "longitude": 26.1494
+      "latitude": 44.425702,
+      "longitude": 26.072934
     },
     "specialties": [
       "pneumology",
       "gynecology",
       "urology",
       "orthopedics",
-      "radiology"
+      "radiology",
+	“nephrology”,
+	“cardiology”,
+	“internal-medicine”,
+	“intensive-care”
     ]
   },
   {
     "id": 16,
     "name": "Spitalul Clinic Panait Sîrbu",
+    "address":"Strada Boișoara, 060251 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4355,
-      "longitude": 26.0979
+      "latitude": 44.449863,
+      "longitude": 26.060186
     },
     "specialties": [
-      "gastroenterology",
-      "ophthalmology"
+      "gynecology",
+      "neonatology",
+	“reproductive-medicine”,
+	“pediatric-intensive-care”
     ]
   },
   {
     "id": 17,
     "name": "Spitalul Clinic de Ortopedie Foisor",
+    "address":"Bulevardul Ferdinand I 35-37, 030167 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4251,
-      "longitude": 26.1643
+      "latitude": 44.440837,
+      "longitude": 26.121029
     },
     "specialties": [
       "dermatology",
       "ENT",
       "psychiatry",
-      "trauma"
+      "trauma", 
+	“orthopedics”,
+	“joint-replacement”,
+	“general-surgery”
     ]
   },
   {
     "id": 18,
     "name": "Spitalul Clinic de Urgență Chirurgie Plastică și Arsuri",
+    "address":"Calea Griviței 218, 010713 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4405,
-      "longitude": 26.0516
+      "latitude": 44.463843,
+      "longitude": 26.055979
     },
     "specialties": [
       "oncology",
       "orthopedics",
       "ophthalmology",
       "neurology",
-      "gynecology"
+      "gynecology",
+	“burn-care”, 
+	“reconstructive-surgery”
     ]
   },
   {
     "id": 19,
-    "name": "Spitalul de Pneumoftiziologie Sf. Maria",
+    "name": "Spitalul Clinic Sf. Maria",
+    "address":"Bulevardul Ion Mihalache 37-39, 011172 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.462,
-      "longitude": 26.1639
+      "latitude": 44.456345,
+      "longitude": 26.078845
     },
     "specialties": [
       "pediatrics",
       "urology",
       "ophthalmology",
       "psychiatry",
-      "trauma"
+      "trauma", 
+	“pulmonology”,
+	“general-surgery”,
+	“internal-medicine”, 
+	“ENT”
     ]
   },
   {
     "id": 20,
     "name": "Spitalul Universitar de Urgență Elias",
+    "address":"Bulevardul Mărăști 17, 011461 București",
+    "type":"mixed",
     "coordinates": {
-      "latitude": 44.4257,
-      "longitude": 26.1042
+      "latitude": 44.466269,
+      "longitude": 26.073767
     },
     "specialties": [
       "pediatrics",
       "orthopedics",
-      "ophthalmology"
+      "ophthalmology", 
+	internal-medicine”,
+	“cardiology”,
+	“neurology”,
+	“general-surgery”,
+	“gynecology”,
+	“oncology”,
+	“ENT”
     ]
   },
-  {
+{
     "id": 21,
-    "name": "Centrul Medical Sector 3 21",
+    "name": "Spitalul de pneumoftiziologie Sfântul Ștefan",
+    "address":"Șoseaua Ștefan cel Mare 11, 020122 București",
+    "type":"adult_only",
     "coordinates": {
-      "latitude": 44.4882,
-      "longitude": 26.1324
-    },
-    "specialties": [
-      "cardiology",
-      "urology",
-      "orthopedics"
-    ]
-  },
-  {
-    "id": 22,
-    "name": "Spitalul Clinic Central 22",
-    "coordinates": {
-      "latitude": 44.4257,
-      "longitude": 26.062
+      "latitude": 44.453636,
+      "longitude": 26.105381
     },
     "specialties": [
       "pneumology",
-      "ENT",
-      "neurology",
-      "orthopedics"
-    ]
-  },
-  {
-    "id": 23,
-    "name": "Institutul Medical Sud 23",
-    "coordinates": {
-      "latitude": 44.4631,
-      "longitude": 26.1278
-    },
-    "specialties": [
-      "ENT",
-      "gastroenterology",
-      "psychiatry",
-      "radiology"
-    ]
-  },
-  {
-    "id": 24,
-    "name": "Centrul Medical Sector 3 24",
-    "coordinates": {
-      "latitude": 44.3845,
-      "longitude": 26.0401
-    },
-    "specialties": [
-      "dermatology",
-      "oncology"
-    ]
-  },
-  {
-    "id": 25,
-    "name": "Institutul Medical Nord 25",
-    "coordinates": {
-      "latitude": 44.3978,
-      "longitude": 26.1379
-    },
-    "specialties": [
-      "dermatology",
-      "radiology"
-    ]
-  },
-  {
-    "id": 26,
-    "name": "Clinica de Urgență Sector 5 26",
-    "coordinates": {
-      "latitude": 44.4061,
-      "longitude": 26.1755
-    },
-    "specialties": [
-      "trauma",
-      "ophthalmology",
-      "pneumology",
-      "radiology",
-      "neurology"
-    ]
-  },
-  {
-    "id": 27,
-    "name": "Centrul Medical Sector 3 27",
-    "coordinates": {
-      "latitude": 44.3877,
-      "longitude": 26.0845
-    },
-    "specialties": [
-      "neurology",
-      "dermatology",
-      "pediatrics"
-    ]
-  },
-  {
-    "id": 28,
-    "name": "Institutul Medical Sector 5 28",
-    "coordinates": {
-      "latitude": 44.4446,
-      "longitude": 26.0357
-    },
-    "specialties": [
-      "cardiology",
-      "urology"
-    ]
-  },
-  {
-    "id": 29,
-    "name": "Clinica de Urgență Sector 1 29",
-    "coordinates": {
-      "latitude": 44.4655,
-      "longitude": 26.1533
-    },
-    "specialties": [
-      "gynecology",
-      "pneumology",
-      "radiology",
-      "urology",
-      "neurology"
-    ]
-  },
-  {
-    "id": 30,
-    "name": "Clinica de Urgență Vest 30",
-    "coordinates": {
-      "latitude": 44.4585,
-      "longitude": 26.1213
-    },
-    "specialties": [
-      "pneumology",
-      "pediatrics",
-      "oncology"
-    ]
-  },
-  {
-    "id": 31,
-    "name": "Clinica de Urgență Sector 3 31",
-    "coordinates": {
-      "latitude": 44.4127,
-      "longitude": 26.0465
-    },
-    "specialties": [
-      "cardiology",
-      "pneumology",
-      "ENT",
-      "neurology"
-    ]
-  },
-  {
-    "id": 32,
-    "name": "Clinica de Urgență Sector 6 32",
-    "coordinates": {
-      "latitude": 44.4281,
-      "longitude": 26.0283
-    },
-    "specialties": [
-      "gynecology",
-      "ophthalmology",
-      "neurology"
-    ]
-  },
-  {
-    "id": 33,
-    "name": "Clinica de Urgență Sector 1 33",
-    "coordinates": {
-      "latitude": 44.4323,
-      "longitude": 26.063
-    },
-    "specialties": [
-      "radiology",
-      "psychiatry",
-      "gynecology"
-    ]
-  },
-  {
-    "id": 34,
-    "name": "Centrul Medical Vest 34",
-    "coordinates": {
-      "latitude": 44.4814,
-      "longitude": 26.1329
-    },
-    "specialties": [
-      "gynecology",
-      "psychiatry",
-      "orthopedics"
-    ]
-  },
-  {
-    "id": 35,
-    "name": "Institutul Medical Central 35",
-    "coordinates": {
-      "latitude": 44.3976,
-      "longitude": 26.1232
-    },
-    "specialties": [
-      "radiology",
-      "urology",
-      "pneumology"
-    ]
-  },
-  {
-    "id": 36,
-    "name": "Spitalul Clinic Sector 4 36",
-    "coordinates": {
-      "latitude": 44.4336,
-      "longitude": 26.1595
-    },
-    "specialties": [
-      "orthopedics",
-      "cardiology",
-      "trauma"
-    ]
-  },
-  {
-    "id": 37,
-    "name": "Spitalul Clinic Sector 1 37",
-    "coordinates": {
-      "latitude": 44.3995,
-      "longitude": 26.0772
-    },
-    "specialties": [
-      "ENT",
-      "pneumology"
-    ]
-  },
-  {
-    "id": 38,
-    "name": "Clinica de Urgență Est 38",
-    "coordinates": {
-      "latitude": 44.446,
-      "longitude": 26.0502
-    },
-    "specialties": [
-      "radiology",
-      "psychiatry",
-      "oncology",
-      "gastroenterology"
-    ]
-  },
-  {
-    "id": 39,
-    "name": "Clinica de Urgență Sector 3 39",
-    "coordinates": {
-      "latitude": 44.3802,
-      "longitude": 26.1358
-    },
-    "specialties": [
-      "gynecology",
-      "radiology",
-      "urology",
-      "orthopedics"
-    ]
-  },
-  {
-    "id": 40,
-    "name": "Spitalul Clinic Central 40",
-    "coordinates": {
-      "latitude": 44.4446,
-      "longitude": 26.1266
-    },
-    "specialties": [
-      "neurology",
-      "gynecology",
-      "ENT"
-    ]
-  },
-  {
-    "id": 41,
-    "name": "Spitalul Clinic Sector 3 41",
-    "coordinates": {
-      "latitude": 44.4864,
-      "longitude": 26.0451
-    },
-    "specialties": [
-      "neurology",
-      "psychiatry"
-    ]
-  },
-  {
-    "id": 42,
-    "name": "Spitalul Clinic Sector 2 42",
-    "coordinates": {
-      "latitude": 44.4976,
-      "longitude": 26.1314
-    },
-    "specialties": [
-      "oncology",
-      "pediatrics",
-      "orthopedics",
-      "radiology",
-      "gastroenterology"
-    ]
-  },
-  {
-    "id": 43,
-    "name": "Spitalul Clinic Sector 1 43",
-    "coordinates": {
-      "latitude": 44.4162,
-      "longitude": 26.0227
-    },
-    "specialties": [
-      "gynecology",
-      "dermatology",
-      "psychiatry",
-      "gastroenterology",
-      "trauma"
-    ]
-  },
-  {
-    "id": 44,
-    "name": "Clinica de Urgență Sector 4 44",
-    "coordinates": {
-      "latitude": 44.4276,
-      "longitude": 26.1312
-    },
-    "specialties": [
-      "orthopedics",
-      "psychiatry",
-      "gynecology"
-    ]
-  },
-  {
-    "id": 45,
-    "name": "Centrul Medical Sector 6 45",
-    "coordinates": {
-      "latitude": 44.4802,
-      "longitude": 26.1582
-    },
-    "specialties": [
-      "pediatrics",
-      "trauma"
-    ]
-  },
-  {
-    "id": 46,
-    "name": "Clinica de Urgență Sector 3 46",
-    "coordinates": {
-      "latitude": 44.4249,
-      "longitude": 26.0622
-    },
-    "specialties": [
-      "urology",
-      "pediatrics",
-      "dermatology"
-    ]
-  },
-  {
-    "id": 47,
-    "name": "Institutul Medical Sector 1 47",
-    "coordinates": {
-      "latitude": 44.4306,
-      "longitude": 26.0257
-    },
-    "specialties": [
-      "neurology",
-      "orthopedics"
-    ]
-  },
-  {
-    "id": 48,
-    "name": "Institutul Medical Sector 3 48",
-    "coordinates": {
-      "latitude": 44.4411,
-      "longitude": 26.1122
-    },
-    "specialties": [
-      "gynecology",
-      "cardiology",
-      "urology"
-    ]
-  },
-  {
-    "id": 49,
-    "name": "Institutul Medical Sud 49",
-    "coordinates": {
-      "latitude": 44.3896,
-      "longitude": 26.0778
-    },
-    "specialties": [
-      "pediatrics",
-      "radiology",
-      "psychiatry",
-      "oncology",
-      "dermatology"
-    ]
-  },
-  {
-    "id": 50,
-    "name": "Centrul Medical Sector 2 50",
-    "coordinates": {
-      "latitude": 44.4986,
-      "longitude": 26.1006
-    },
-    "specialties": [
-      "orthopedics",
-      "neurology"
-    ]
-  },
-  {
-    "id": 51,
-    "name": "Spitalul Clinic Sector 5 51",
-    "coordinates": {
-      "latitude": 44.3823,
-      "longitude": 26.1663
-    },
-    "specialties": [
-      "gastroenterology",
-      "pneumology"
-    ]
-  },
-  {
-    "id": 52,
-    "name": "Centrul Medical Nord 52",
-    "coordinates": {
-      "latitude": 44.4022,
-      "longitude": 26.1687
-    },
-    "specialties": [
-      "pediatrics",
-      "neurology",
-      "gastroenterology",
-      "radiology"
-    ]
-  },
-  {
-    "id": 53,
-    "name": "Institutul Medical Sector 2 53",
-    "coordinates": {
-      "latitude": 44.4043,
-      "longitude": 26.0536
-    },
-    "specialties": [
-      "orthopedics",
-      "oncology",
-      "gynecology"
-    ]
-  },
-  {
-    "id": 54,
-    "name": "Spitalul Clinic Sector 2 54",
-    "coordinates": {
-      "latitude": 44.4558,
-      "longitude": 26.1163
-    },
-    "specialties": [
-      "oncology",
-      "radiology"
-    ]
-  },
-  {
-    "id": 55,
-    "name": "Institutul Medical Sector 1 55",
-    "coordinates": {
-      "latitude": 44.43,
-      "longitude": 26.1656
-    },
-    "specialties": [
-      "pneumology",
-      "orthopedics",
-      "dermatology"
-    ]
-  },
-  {
-    "id": 56,
-    "name": "Centrul Medical Sud 56",
-    "coordinates": {
-      "latitude": 44.435,
-      "longitude": 26.0433
-    },
-    "specialties": [
-      "cardiology",
-      "neurology",
-      "urology",
-      "ENT"
-    ]
-  },
-  {
-    "id": 57,
-    "name": "Spitalul Clinic Sector 1 57",
-    "coordinates": {
-      "latitude": 44.4079,
-      "longitude": 26.0249
-    },
-    "specialties": [
-      "psychiatry",
-      "ophthalmology"
-    ]
-  },
-  {
-    "id": 58,
-    "name": "Clinica de Urgență Sector 4 58",
-    "coordinates": {
-      "latitude": 44.4701,
-      "longitude": 26.0602
-    },
-    "specialties": [
-      "psychiatry",
-      "oncology",
-      "trauma"
-    ]
-  },
-  {
-    "id": 59,
-    "name": "Clinica de Urgență Sector 3 59",
-    "coordinates": {
-      "latitude": 44.4872,
-      "longitude": 26.0666
-    },
-    "specialties": [
-      "orthopedics",
-      "pediatrics",
-      "pneumology",
-      "urology",
-      "radiology"
-    ]
-  },
-  {
-    "id": 60,
-    "name": "Clinica de Urgență Sector 6 60",
-    "coordinates": {
-      "latitude": 44.4611,
-      "longitude": 26.0516
-    },
-    "specialties": [
-      "radiology",
-      "urology",
-      "ophthalmology",
-      "pneumology"
+      "phthisiology",
+      "bronchology"
     ]
   }
-]
+  ]
+
