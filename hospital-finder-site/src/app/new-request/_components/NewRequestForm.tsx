@@ -88,6 +88,11 @@ export default function NewRequestForm() {
                         rows={10}
                     />
                 </Field>
+                <Field className="self-center w-25 pt-6">
+                    <Button type="submit" variant="default" >
+                        Submit
+                    </Button>
+                </Field>
             </FieldGroup>
         </form>
     );
