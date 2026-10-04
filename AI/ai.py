@@ -49,7 +49,7 @@ for x in hospitals:
 
 candidate_labels=list(unique_specialities)
 candidate_labels.append("Unrelated to medical symptoms")
-
+@app.post("/recommend-hospital")
 def reccomend_hospital(request: PatientRequest):
     output = classifier(sequence_to_classify, candidate_labels,hypothesis_template="The patient's condition requires treatment in the {} department.")
     best_label = output["labels"][0]
