@@ -1,10 +1,7 @@
 'use client';
 
-import Map, { Marker, MapRef, MapMouseEvent } from "react-map-gl/mapbox";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useRef } from "react";
-
-type LatLng = { lat: number; lng: number };
+import { useEffect, useState } from "react";
+import { BaseMap, LatLng } from "@/components/base-map";
 
 type MapPickerProps = {
     position: LatLng | null;
@@ -52,7 +49,7 @@ async function forwardGeocode(query: string, signal: AbortSignal): Promise<Geoco
         country: "ro",
         language: "en",
         limit: "1",
-        proximity: `${BUCHAREST.lng},${BUCHAREST.lat}`, // bias towards Bucharest, don't hard-restrict
+        proximity: `${BUCHAREST.lng},${BUCHAREST.lat}`,
     });
     const res = await fetch(`${GEOCODING_URL}/forward?${params}`, { signal });
     if (!res.ok) throw new Error("Geocoding failed");
@@ -75,8 +72,9 @@ async function reverseGeocode({ lat, lng }: LatLng): Promise<GeocodeFeature | un
 }
 
 export function MapPicker({ position, searchQuery, onLocationChange, onAddressFromMap }: MapPickerProps) {
-    const mapRef = useRef<MapRef>(null);
+    const [focus, setFocus] = useState<LatLng | null>(null);
 
+    // Typed address -> move the marker (debounced)
     useEffect(() => {
         if (!searchQuery.trim()) return;
 
@@ -88,7 +86,7 @@ export function MapPicker({ position, searchQuery, onLocationChange, onAddressFr
                     const [lng, lat] = feature.geometry.coordinates;
                     const pos = { lat, lng };
                     onLocationChange(pos, isInBucharest(feature));
-                    mapRef.current?.flyTo({ center: [lng, lat], duration: 800 });
+                    setFocus(pos); // BaseMap flies there
                 })
                 .catch(() => { /* aborted or no result, ignore */ });
         }, 600);
@@ -99,9 +97,8 @@ export function MapPicker({ position, searchQuery, onLocationChange, onAddressFr
         };
     }, [searchQuery, onLocationChange]);
 
-    function handleMapClick(e: MapMouseEvent) {
-        const latLng = { lat: e.lngLat.lat, lng: e.lngLat.lng };
-
+    // Map click -> reverse geocode, then move the marker + fill the address input
+    function handleMapClick(latLng: LatLng) {
         reverseGeocode(latLng)
             .then((feature) => {
                 onLocationChange(latLng, isInBucharest(feature));
@@ -114,17 +111,10 @@ export function MapPicker({ position, searchQuery, onLocationChange, onAddressFr
     }
 
     return (
-        <div className="h-100 w-full">
-            <Map
-                ref={mapRef}
-                mapboxAccessToken={TOKEN}
-                initialViewState={{ latitude: BUCHAREST.lat, longitude: BUCHAREST.lng, zoom: 11 }}
-                mapStyle="mapbox://styles/stogalosu/cmuu5zh7e009301s8385q4sp6"
-                style={{ width: "100%", height: "100%" }}
-                onClick={handleMapClick}
-            >
-                {position && <Marker latitude={position.lat} longitude={position.lng} />}
-            </Map>
-        </div>
+        <BaseMap
+            markers={position ? [{ id: "selected", position }] : []}
+            focus={focus}
+            onClick={handleMapClick}
+        />
     );
 }
