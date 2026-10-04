@@ -1,43 +1,35 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from flask import Flask, request, jsonify
+from dataclasses import dataclass
 from typing import List, Dict, Tuple, Optional
+import sys
 import json
 import torch
 from sentence_transformers import SentenceTransformer, util
 
-app = FastAPI(title="Hospital Recommendation API")
+app = Flask(__name__)
 
-class Coordinates(BaseModel):
+@dataclass
+class Coordinates:
     latitude: float
     longitude: float
 
-class Hospital(BaseModel):
+@dataclass
+class Hospital:
     id: int
     name: str
     type: str
     coordinates: Coordinates
     specialties: List[str]
 
-class PatientRequest(BaseModel):
-    symptom: str
-    latitude: float
-    longitude: float
-    age: int
-
 SYMPTOM_MAPPING = {
-    "gastroenterology": ["I feel like throwing up", "nausea", "stomach pain", "diarrhea", "abdominal cramps",
-                         "bloating", "vomiting", "heartburn"],
-    "cardiology": ["chest pain", "heart palpitations", "shortness of breath", "irregular heartbeat",
-                   "tightness in chest", "high blood pressure"],
-    "neurology": ["severe headache", "dizziness", "numbness in limbs", "difficulty speaking", "seizures",
-                  "loss of balance"],
+    "gastroenterology": ["I feel like throwing up", "nausea", "stomach pain", "diarrhea", "abdominal cramps", "bloating", "vomiting", "heartburn"],
+    "cardiology": ["chest pain", "heart palpitations", "shortness of breath", "irregular heartbeat", "tightness in chest", "high blood pressure"],
+    "neurology": ["severe headache", "dizziness", "numbness in limbs", "difficulty speaking", "seizures", "loss of balance"],
     "psychiatry": ["feeling depressed", "extreme anxiety", "hallucinations", "panic attack", "insomnia", "mood swings"],
-    "addiction-recovery": ["alcohol withdrawal", "drug addiction", "craving substances", "rehab for drugs",
-                           "drug abuse"],
+    "addiction-recovery": ["alcohol withdrawal", "drug addiction", "craving substances", "rehab for drugs", "drug abuse"],
     "orthopedics": ["broken bone", "joint pain", "sprained ankle", "bone fracture", "back pain", "knee injury"],
     "trauma": ["severe injury", "accident", "deep cut", "physical trauma", "crush injury", "car crash"],
-    "pneumology": ["difficulty breathing", "persistent cough", "wheezing", "lung infection", "shortness of breath",
-                   "phthisiology"],
+    "pneumology": ["difficulty breathing", "persistent cough", "wheezing", "lung infection", "shortness of breath", "phthisiology"],
     "ENT": ["sore throat", "earache", "nasal congestion", "difficulty swallowing", "sinus pain", "hearing loss"],
     "dermatology": ["skin rash", "itching", "acne", "skin burns", "strange spots on skin", "skin inflammation"],
     "urology": ["pain during urination", "blood in urine", "bladder pain", "kidney stones", "urinary tract infection"],
@@ -47,8 +39,7 @@ SYMPTOM_MAPPING = {
     "ophthalmology": ["blurry vision", "eye pain", "red eyes", "sudden vision loss", "eye infection"],
     "infectious-diseases": ["high fever", "chills", "tropical disease", "viral infection", "severe flu", "sepsis"],
     "emergency-medicine": ["unconscious", "heavy bleeding", "heart attack", "stroke symptoms", "stopped breathing"],
-    "general-surgery": ["appendicitis", "gallbladder pain", "hernia", "need surgical intervention",
-                        "abdominal surgery"],
+    "general-surgery": ["appendicitis", "gallbladder pain", "hernia", "need surgical intervention", "abdominal surgery"],
     "internal-medicine": ["general malaise", "chronic fatigue", "unexplained weight loss", "systemic illness"]
 }
 
@@ -62,7 +53,7 @@ class HospitalRecommendationSystem:
     def __init__(self, json_path: str):
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.hospitals = self._load_hospitals(json_path)
-
+        
         self.triage_labels = []
         self.triage_embeddings = []
         for label, examples in TRIAGE_ANCHORS.items():
@@ -82,14 +73,11 @@ class HospitalRecommendationSystem:
     def _load_hospitals(self, path: str) -> List[Hospital]:
         with open(path, "r", encoding="utf8") as f:
             data = json.load(f)
-
         hospitals = []
         for x in data:
             h_type = x["type"].replace("peidatric", "pediatric")
             hospitals.append(Hospital(
-                id=x["id"],
-                name=x["name"],
-                type=h_type,
+                id=x["id"], name=x["name"], type=h_type,
                 coordinates=Coordinates(x["coordinates"]["latitude"], x["coordinates"]["longitude"]),
                 specialties=x["specialties"]
             ))
@@ -103,14 +91,9 @@ class HospitalRecommendationSystem:
 
     def recommend(self, user_text: str, lat: float, lon: float, age: int):
         triage_label, triage_score = self.get_best_match(user_text, self.triage_embeddings, self.triage_labels)
-
+        
         if triage_label == "non-medical":
-            return {
-                "status": "irrelevant",
-                "triage_label": triage_label,
-                "confidence": triage_score,
-                "message": "Result: No medical hospitalization required."
-            }
+            return {"status": "non-medical", "message": "No medical hospitalization required."}
 
         best_spec, spec_score = self.get_best_match(user_text, self.spec_embeddings, self.spec_labels)
 
@@ -136,29 +119,32 @@ class HospitalRecommendationSystem:
 
         if selected_h:
             return {
-                "status": "success",
-                "triage_label": triage_label,
+                "status": "medical",
+                "triage": triage_label,
                 "detected_specialty": best_spec,
-                "specialty_score": spec_score,
-                "hospital_id": selected_h.id,
-                "hospital_name": selected_h.name
+                "hospital": {
+                    "id": selected_h.id,
+                    "name": selected_h.name,
+                    "type": selected_h.type
+                }
             }
-        else:
-            return {
-                "status": "not_found",
-                "triage_label": triage_label,
-                "detected_specialty": best_spec,
-                "message": "Result: No hospital found for this specialty in your area."
-            }
+        return {"status": "no_hospital_found", "message": "No hospital found for this specialty in your area."}
 
-recommender = HospitalRecommendationSystem("hospital_list.json")
+syses = HospitalRecommendationSystem("hospital_list.json")
 
-@app.post("/recommend-hospital")
-def recommend_endpoint(request: PatientRequest):
-    result = recommender.recommend(
-        user_text=request.symptom,
-        lat=request.latitude,
-        lon=request.longitude,
-        age=request.age
+@app.route('/recommend', methods=['POST'])
+def recommend_hospital():
+    data = request.json
+    if not data or not all(k in data for k in ("text", "latitude", "longitude", "age")):
+        return jsonify({"error": "Missing required fields: text, latitude, longitude, age"}), 400
+
+    result = syses.recommend(
+        user_text=data['text'],
+        lat=float(data['latitude']),
+        lon=float(data['longitude']),
+        age=int(data['age'])
     )
-    return result
+    return jsonify(result)
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
