@@ -109,116 +109,116 @@ export default function NewRequestForm() {
     }
 
     return (
-        <form onSubmit={onSubmit} className="w-full max-w-sm">
-            <FieldGroup>
-                <div className="flex flex-row gap-8">
-                    <Field data-invalid={!surnameValid ? "true" : "false"}>
-                        <FieldLabel htmlFor="surname">Surname</FieldLabel>
+        <form onSubmit={onSubmit} className="w-full">
+            <div className="flex flex-row w-full justify-center gap-[10%]">
+                <MapPicker
+                    position={position}
+                    searchQuery={searchQuery}
+                    onLocationChange={handleLocationChange}
+                    onAddressFromMap={setAddress} // does NOT touch searchQuery
+                />
+                <FieldGroup className="w-full max-w-sm">
+                    <div className="flex flex-row gap-8">
+                        <Field data-invalid={!surnameValid ? "true" : "false"}>
+                            <FieldLabel htmlFor="surname">Surname</FieldLabel>
+                            <Input
+                                id="surname"
+                                name="surname"
+                                type="text"
+                                placeholder="Popescu"
+                                ref={surnameRef}
+                                required
+                                aria-invalid={!surnameValid ? "true" : "false"}
+                            />
+                            {!surnameValid && (
+                                <p className="text-sm text-destructive">
+                                    Must be under {MAX_NAME_LENGTH} characters.
+                                </p>
+                            )}
+                        </Field>
+                        <Field data-invalid={!nameValid ? "true" : "false"}>
+                            <FieldLabel htmlFor="name">First name</FieldLabel>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                placeholder="Ion"
+                                ref={nameRef}
+                                required
+                                aria-invalid={!nameValid ? "true" : "false"}
+                            />
+                            {!nameValid && (
+                                <p className="text-sm text-destructive">
+                                    Must be under {MAX_NAME_LENGTH} characters.
+                                </p>
+                            )}
+                        </Field>
+                    </div>
+                    <Field data-invalid={!ageValid ? "true" : "false"}>
+                        <FieldLabel htmlFor="age">Age</FieldLabel>
                         <Input
-                            id="surname"
-                            name="surname"
-                            type="text"
-                            placeholder="Popescu"
-                            ref={surnameRef}
+                            id="age"
+                            name="age"
+                            type="number"
+                            placeholder="18"
+                            ref={ageRef}
                             required
-                            aria-invalid={!surnameValid ? "true" : "false"}
+                            aria-invalid={!ageValid ? "true" : "false"}
                         />
-                        {!surnameValid && (
-                            <p className="text-sm text-destructive">
-                                Must be under {MAX_NAME_LENGTH} characters.
-                            </p>
+                    </Field>
+                    <Field data-invalid={!phoneValid ? "true" : "false"}>
+                        <FieldLabel htmlFor="phone">Phone number</FieldLabel>
+                        <Input
+                            id="phone"
+                            name="phone"
+                            type="text"
+                            placeholder="07xxxxxxxx"
+                            ref={phoneRef}
+                            aria-invalid={!phoneValid ? "true" : "false"}
+                        />
+                    </Field>
+                    <Field data-invalid={!descriptionValid ? "true" : "false"}>
+                        <FieldLabel htmlFor="description">Describe your symptoms:</FieldLabel>
+                        <Textarea
+                            id="description"
+                            name="description"
+                            placeholder="What's wrong?"
+                            ref={descriptionRef}
+                            required
+                            aria-invalid={!descriptionValid ? "true" : "false"}
+                            rows={10}
+                        />
+                    </Field>
+                    <Field data-invalid={locationError ? "true" : "false"}>
+                        <FieldLabel htmlFor="address">Address</FieldLabel>
+                        <Input
+                            id="address"
+                            name="address"
+                            type="text"
+                            placeholder="Str. Ion Mincu nr 10"
+                            value={address}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                setAddress(e.currentTarget.value);
+                                setSearchQuery(e.currentTarget.value); // triggers forward geocoding
+                            }}
+                            required
+                            aria-invalid={locationError ? "true" : "false"}
+                        />
+                        {locationError && (
+                            <p className="text-sm text-destructive">{locationError}</p>
                         )}
                     </Field>
-                    <Field data-invalid={!nameValid ? "true" : "false"}>
-                        <FieldLabel htmlFor="name">First name</FieldLabel>
-                        <Input
-                            id="name"
-                            name="name"
-                            type="text"
-                            placeholder="Ion"
-                            ref={nameRef}
-                            required
-                            aria-invalid={!nameValid ? "true" : "false"}
-                        />
-                        {!nameValid && (
-                            <p className="text-sm text-destructive">
-                                Must be under {MAX_NAME_LENGTH} characters.
-                            </p>
-                        )}
+                    <Field className="self-center w-25 pt-6">
+                        <Button
+                            type="submit"
+                            variant="default"
+                            disabled={position !== null && !inBucharest}
+                        >
+                            Submit
+                        </Button>
                     </Field>
-                </div>
-                <Field data-invalid={!ageValid ? "true" : "false"}>
-                    <FieldLabel htmlFor="age">Age</FieldLabel>
-                    <Input
-                        id="age"
-                        name="age"
-                        type="number"
-                        placeholder="18"
-                        ref={ageRef}
-                        required
-                        aria-invalid={!ageValid ? "true" : "false"}
-                    />
-                </Field>
-                <Field data-invalid={!phoneValid ? "true" : "false"}>
-                    <FieldLabel htmlFor="phone">Phone number</FieldLabel>
-                    <Input
-                        id="phone"
-                        name="phone"
-                        type="text"
-                        placeholder="07xxxxxxxx"
-                        ref={phoneRef}
-                        aria-invalid={!phoneValid ? "true" : "false"}
-                    />
-                </Field>
-                <Field data-invalid={!descriptionValid ? "true" : "false"}>
-                    <FieldLabel htmlFor="description">Describe your symptoms:</FieldLabel>
-                    <Textarea
-                        id="description"
-                        name="description"
-                        placeholder="What's wrong?"
-                        ref={descriptionRef}
-                        required
-                        aria-invalid={!descriptionValid ? "true" : "false"}
-                        rows={10}
-                    />
-                </Field>
-                <Field data-invalid={locationError ? "true" : "false"}>
-                    <FieldLabel htmlFor="address">Address</FieldLabel>
-                    <Input
-                        id="address"
-                        name="address"
-                        type="text"
-                        placeholder="Str. Ion Mincu nr 10"
-                        value={address}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setAddress(e.currentTarget.value);
-                            setSearchQuery(e.currentTarget.value); // triggers forward geocoding
-                        }}
-                        required
-                        aria-invalid={locationError ? "true" : "false"}
-                    />
-                    {locationError && (
-                        <p className="text-sm text-destructive">{locationError}</p>
-                    )}
-                </Field>
-                <Field>
-                    <MapPicker
-                        position={position}
-                        searchQuery={searchQuery}
-                        onLocationChange={handleLocationChange}
-                        onAddressFromMap={setAddress} // does NOT touch searchQuery
-                    />
-                </Field>
-                <Field className="self-center w-25 pt-6">
-                    <Button
-                        type="submit"
-                        variant="default"
-                        disabled={position !== null && !inBucharest}
-                    >
-                        Submit
-                    </Button>
-                </Field>
-            </FieldGroup>
+                </FieldGroup>
+            </div>
         </form>
     );
 }
