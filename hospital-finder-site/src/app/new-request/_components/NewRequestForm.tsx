@@ -13,21 +13,47 @@ export default function NewRequestForm() {
     const phoneRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
-    const [nameValid, setNameValid] = useState(true);
-    const [surnameValid, setSurnameValid] = useState(true);
     const [ageValid, setAgeValid] = useState(true);
     const [phoneValid, setPhoneValid] = useState(true);
     const [descriptionValid, setDescriptionValid] = useState(true);
 
-    function onSubmit() {
+    function isAgeValid(age: number) {
+        return age >= 0 && age <= 120;
+    }
 
+    function isPhoneValid(phone: string) {
+        const phoneNumber = Number(phone);
+        if(!isNaN(phoneNumber))
+            return (phone.length == 10 && phone.charAt(0) == '0') ||
+                    (phone.length <= 16 && phone.charAt(0) == '+');
+        else return false;
+    }
+
+    function isDescriptionValid(description: string) {
+        return description.length > 0 && description.length <= 200;
+    }
+
+    function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        const ageValue = Number(ageRef.current?.value ?? 0);
+        const isValidAge = isAgeValid(ageValue);
+        setAgeValid(isValidAge);
+
+        const phoneValue = phoneRef.current?.value ?? "";
+        const isValidPhone = isPhoneValid(phoneValue);
+        setPhoneValid(isValidPhone);
+
+        const descriptionValue = descriptionRef.current?.value ?? "";
+        const isValidDescription = isDescriptionValid(descriptionValue);
+        setDescriptionValid(isValidDescription);
     }
 
     return (
         <form onSubmit={onSubmit} className="w-full max-w-sm">
             <FieldGroup>
                 <div className="flex flex-row gap-8">
-                    <Field data-invalid={!surnameValid ? "true" : "false"}>
+                    <Field>
                         <FieldLabel htmlFor="surname">Surname</FieldLabel>
                             <Input
                                 id="surname"
@@ -36,10 +62,9 @@ export default function NewRequestForm() {
                                 placeholder="Popescu"
                                 ref={surnameRef}
                                 required
-                                aria-invalid={!surnameValid ? "true" : "false"}
                             />
                     </Field>
-                    <Field data-invalid={!nameValid ? "true" : "false"}>
+                    <Field>
                         <FieldLabel htmlFor="name">First name</FieldLabel>
                         <Input
                             id="name"
@@ -48,7 +73,6 @@ export default function NewRequestForm() {
                             placeholder="Ion"
                             ref={nameRef}
                             required
-                            aria-invalid={!nameValid ? "true" : "false"}
                         />
                     </Field>
                 </div>
@@ -57,7 +81,7 @@ export default function NewRequestForm() {
                     <Input
                         id="age"
                         name="age"
-                        type="text"
+                        type="number"
                         placeholder="18"
                         ref={ageRef}
                         required
