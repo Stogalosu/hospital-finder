@@ -2,13 +2,18 @@
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import {APIProvider} from "@vis.gl/react-google-maps";
-import {MapPicker} from "@/components/map-picker";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import { MapPicker } from "@/components/map-picker";
 
 type LatLng = { lat: number; lng: number };
+
+const MAX_NAME_LENGTH = 25; // must be strictly less than this
+
+const MSG_MISSING = "Please enter a valid address or click a point on the map.";
+const MSG_OUTSIDE = "The location must be inside Bucharest.";
 
 export default function NewRequestForm() {
     const apiKey: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
@@ -19,14 +24,28 @@ export default function NewRequestForm() {
     const phoneRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
+    const [nameValid, setNameValid] = useState(true);
+    const [surnameValid, setSurnameValid] = useState(true);
     const [ageValid, setAgeValid] = useState(true);
     const [phoneValid, setPhoneValid] = useState(true);
     const [descriptionValid, setDescriptionValid] = useState(true);
-    const [locationValid, setLocationValid] = useState(true);
+    const [locationError, setLocationError] = useState<string | null>(null);
 
     const [address, setAddress] = useState("");           // what the input shows
     const [searchQuery, setSearchQuery] = useState("");   // only set when the user types
     const [position, setPosition] = useState<LatLng | null>(null);
+    const [inBucharest, setInBucharest] = useState(false);
+
+    const handleLocationChange = useCallback((pos: LatLng, isInside: boolean) => {
+        setPosition(pos);
+        setInBucharest(isInside);
+        setLocationError(isInside ? null : MSG_OUTSIDE);
+    }, []);
+
+    function isNameValid(name: string) {
+        const trimmed = name.trim();
+        return trimmed.length > 0 && trimmed.length < MAX_NAME_LENGTH;
+    }
 
     function isAgeValid(age: number) {
         return age >= 0 && age <= 120;
@@ -34,6 +53,7 @@ export default function NewRequestForm() {
 
     function isPhoneValid(phone: string) {
         const phoneNumber = Number(phone);
+        if(phone.length == 0) return true;
         if (!isNaN(phoneNumber))
             return (phone.length == 10 && phone.charAt(0) == '0') ||
                 (phone.length <= 16 && phone.charAt(0) == '+');
@@ -41,11 +61,19 @@ export default function NewRequestForm() {
     }
 
     function isDescriptionValid(description: string) {
-        return description.length > 0 && description.length <= 200;
+        return description.length > 0 && description.length <= 150;
     }
 
     function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        const surnameValue = surnameRef.current?.value ?? "";
+        const isValidSurname = isNameValid(surnameValue);
+        setSurnameValid(isValidSurname);
+
+        const nameValue = nameRef.current?.value ?? "";
+        const isValidName = isNameValid(nameValue);
+        setNameValid(isValidName);
 
         const ageValue = Number(ageRef.current?.value ?? 0);
         const isValidAge = isAgeValid(ageValue);
@@ -59,14 +87,19 @@ export default function NewRequestForm() {
         const isValidDescription = isDescriptionValid(descriptionValue);
         setDescriptionValid(isValidDescription);
 
-        const isValidLocation = position !== null;
-        setLocationValid(isValidLocation);
+        let locError: string | null = null;
+        if (position === null) locError = MSG_MISSING;
+        else if (!inBucharest) locError = MSG_OUTSIDE;
+        setLocationError(locError);
 
-        if (!isValidAge || !isValidPhone || !isValidDescription || !isValidLocation) return;
+        if (
+            !isValidSurname || !isValidName || !isValidAge ||
+            !isValidPhone || !isValidDescription || locError !== null
+        ) return;
 
         const payload = {
-            surname: surnameRef.current?.value ?? "",
-            name: nameRef.current?.value ?? "",
+            surname: surnameValue.trim(),
+            name: nameValue.trim(),
             age: ageValue,
             phone: phoneValue,
             description: descriptionValue,
@@ -81,7 +114,7 @@ export default function NewRequestForm() {
         <form onSubmit={onSubmit} className="w-full max-w-sm">
             <FieldGroup>
                 <div className="flex flex-row gap-8">
-                    <Field>
+                    <Field data-invalid={!surnameValid ? "true" : "false"}>
                         <FieldLabel htmlFor="surname">Surname</FieldLabel>
                         <Input
                             id="surname"
@@ -90,9 +123,15 @@ export default function NewRequestForm() {
                             placeholder="Popescu"
                             ref={surnameRef}
                             required
+                            aria-invalid={!surnameValid ? "true" : "false"}
                         />
+                        {!surnameValid && (
+                            <p className="text-sm text-destructive">
+                                Must be under {MAX_NAME_LENGTH} characters.
+                            </p>
+                        )}
                     </Field>
-                    <Field>
+                    <Field data-invalid={!nameValid ? "true" : "false"}>
                         <FieldLabel htmlFor="name">First name</FieldLabel>
                         <Input
                             id="name"
@@ -101,7 +140,13 @@ export default function NewRequestForm() {
                             placeholder="Ion"
                             ref={nameRef}
                             required
+                            aria-invalid={!nameValid ? "true" : "false"}
                         />
+                        {!nameValid && (
+                            <p className="text-sm text-destructive">
+                                Must be under {MAX_NAME_LENGTH} characters.
+                            </p>
+                        )}
                     </Field>
                 </div>
                 <Field data-invalid={!ageValid ? "true" : "false"}>
@@ -124,7 +169,6 @@ export default function NewRequestForm() {
                         type="text"
                         placeholder="07xxxxxxxx"
                         ref={phoneRef}
-                        required
                         aria-invalid={!phoneValid ? "true" : "false"}
                     />
                 </Field>
@@ -140,7 +184,7 @@ export default function NewRequestForm() {
                         rows={10}
                     />
                 </Field>
-                <Field data-invalid={!locationValid ? "true" : "false"}>
+                <Field data-invalid={locationError ? "true" : "false"}>
                     <FieldLabel htmlFor="address">Address</FieldLabel>
                     <Input
                         id="address"
@@ -153,29 +197,28 @@ export default function NewRequestForm() {
                             setSearchQuery(e.currentTarget.value); // triggers forward geocoding
                         }}
                         required
-                        aria-invalid={!locationValid ? "true" : "false"}
+                        aria-invalid={locationError ? "true" : "false"}
                     />
-                    {!locationValid && (
-                        <p className="text-sm text-destructive">
-                            Please enter a valid address or click a point on the map.
-                        </p>
+                    {locationError && (
+                        <p className="text-sm text-destructive">{locationError}</p>
                     )}
                 </Field>
                 <Field>
-                    <APIProvider apiKey={apiKey}>
+                    <APIProvider apiKey={apiKey} language="en" region="RO">
                         <MapPicker
                             position={position}
                             searchQuery={searchQuery}
-                            onPositionChange={(pos) => {
-                                setPosition(pos);
-                                setLocationValid(true);
-                            }}
+                            onLocationChange={handleLocationChange}
                             onAddressFromMap={setAddress} // does NOT touch searchQuery
                         />
                     </APIProvider>
                 </Field>
                 <Field className="self-center w-25 pt-6">
-                    <Button type="submit" variant="default">
+                    <Button
+                        type="submit"
+                        variant="default"
+                        disabled={position !== null && !inBucharest}
+                    >
                         Submit
                     </Button>
                 </Field>
