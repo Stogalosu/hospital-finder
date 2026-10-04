@@ -35,12 +35,12 @@
       "psychiatry",
       "ophthalmology",
       "orthopedics",
-	“general-surgery”,
-	“cardiology”,
-	“oncology”,
-	“neurology”,
-	“urology”,
-	“intensive care”
+	"general-surgery",
+	"cardiology",
+	"oncology",
+	"neurology",
+	"urology",
+	"intensive care"
     ]
   },
   {
@@ -56,12 +56,12 @@
       "gynecology",
       "pneumology",
       "ENT",
-	“general-surgery”,
-	“neonatology”,
-	“internal-medicine”,
-	“rheumatology”,
-	“intensive-care”
-	“oncology”
+	"general-surgery",
+	"neonatology",
+	"internal-medicine",
+	"rheumatology",
+	"intensive-care",
+	"oncology"
     ]
   },
   {
@@ -78,14 +78,14 @@
       "orthopedics",
       "neurology",
       "trauma",
-	“dermatology”, 
-	“neurosurgery”,
-	“rheumatology”,
-	“internal-medicine”,
-	“gastroenterology”,
-	“infectious-diseases”,
-	“pediatric-dermatology”,
-	“pediatrics”
+	"dermatology", 
+	"neurosurgery",
+	"rheumatology",
+	"internal-medicine",
+	"gastroenterology",
+	"infectious-diseases",
+	"pediatric-dermatology",
+	"pediatrics"
     ]
   },
   {
@@ -101,10 +101,10 @@
       "trauma",
       "dermatology",
       "gastroenterology",
-	“obstretics”,
-	“gynecology”,
-	“maternal-fetal-medicine”,
-	“neontology”
+	"obstretics",
+	"gynecology",
+	"maternal-fetal-medicine",
+	"neontology"
     ]
   },
   {
@@ -122,11 +122,11 @@
       "dermatology",
       "pneumology",
       "cardiology",
-	“nephrology”,
-	“dialysis”,
-	“renal-surgery”,
-	“urology”,
-    “internal-medicine”
+	"nephrology",
+	"dialysis",
+	"renal-surgery",
+	"urology",
+    "internal-medicine"
    ]
   },
   {
@@ -141,12 +141,12 @@
     "specialties": [
       "pediatric-orthopedics",
       "pediatric-gynecology",
-	“pediatric-surgery”,
-	“pediatric-neurology”,
-	“pediatric-cardiology”,
-	“pedriatics”,
-	“pedriatic-ENT”,
-	“neonatology”
+	"pediatric-surgery",
+	"pediatric-neurology",
+	"pediatric-cardiology",
+	"pedriatics",
+	"pedriatic-ENT",
+	"neonatology"
     ]
   },
   {
@@ -164,11 +164,11 @@
       "pediatric-urology",
       "pediatric-psychiatry",
       "pediatric-gynecology",
-	“pediatric-emergency-medicine”,
-	“pediatric-surgery”,
-	“pediatric-toxicology”,
-	“pediatric-cardiology”,
-	“pediatric-reconstructive-surgery”
+	"pediatric-emergency-medicine",
+	"pediatric-surgery",
+	"pediatric-toxicology",
+	"pediatric-cardiology",
+	"pediatric-reconstructive-surgery"
     ]
   },
   {
@@ -184,10 +184,10 @@
       "pneumology",
       "oncology",
       "gastroenterology",
-	“infectious-diseases”,
-	“tropical-diseases”,
-	“intensive-care”,
-	“pediatric-infectious-patology”
+	"infectious-diseases",
+	"tropical-diseases",
+	"intensive-care",
+	"pediatric-infectious-patology"
     ]
   },
   {
@@ -203,15 +203,15 @@
       "oncology",
       "dermatology",
       "radiology",
-	“pediatric-gastroenterology”,
-	“hepatology”,
-	“pediatric-hematology”,
-	“nephrology”,
-	“kidney-transplation”,
-	“urology”,
-	“pediatrics”,
-	“general-surgery”,
-	“cardiology”
+	"pediatric-gastroenterology",
+	"hepatology",
+	"pediatric-hematology",
+	"nephrology",
+	"kidney-transplation",
+	"urology",
+	"pediatrics",
+	"general-surgery",
+	"cardiology"
     ]
   },
   {
@@ -227,11 +227,11 @@
       "pneumology",
       "gastroenterology",
       "orthopedics",
-	“infectious-diseases”,
-	“pediatric-infectious-diseases”,
-	“intensive-care”,
-	“pediatric-intensive-care”,
-	“antirabic-center”,
+	"infectious-diseases",
+	"pediatric-infectious-diseases",
+	"intensive-care",
+	"pediatric-intensive-care",
+	"antirabic-center"
     ]
   },
   {
@@ -246,13 +246,13 @@
     "specialties": [
       "urology",
       "radiology",
-	“internal-medicine”,
-	“general-surgery”,
-	“ophthalmology”,
-	“neurology”,
-	“otolaryngology”,
-	“dermatology”,
-	“gynecology”
+	"internal-medicine",
+	"general-surgery",
+	"ophthalmology",
+	"neurology",
+	"otolaryngology",
+	"dermatology",
+	"gynecology"
     ]
   },
   {
@@ -267,10 +267,10 @@
     "specialties": [
       "trauma",
       "cardiology",
-	“adult-psychiatry”,
-	“pediatric-psychiatry”,
-	“pediatric-neurology”,
-	“addiction-recovery”
+	"adult-psychiatry",
+	"pediatric-psychiatry",
+	"pediatric-neurology",
+	"addiction-recovery"
     ]
   },
   {
@@ -285,12 +285,12 @@
     "specialties": [
       "pediatrics",
       "trauma",
-	“metabolic-diseases”,
-	“general-surgery”,
-	“gynecology”,
-	“neonatology”,
-	“internal-medicine”,
-	“pediatric-stomatology”
+	"metabolic-diseases",
+	"general-surgery",
+	"gynecology",
+	"neonatology",
+	"internal-medicine",
+	"pediatric-stomatology"
     ]
   },
   {
@@ -308,10 +308,10 @@
       "urology",
       "orthopedics",
       "radiology",
-	“nephrology”,
-	“cardiology”,
-	“internal-medicine”,
-	“intensive-care”
+	"nephrology",
+	"cardiology",
+	"internal-medicine",
+	"intensive-care"
     ]
   },
   {
@@ -326,8 +326,8 @@
     "specialties": [
       "gynecology",
       "neonatology",
-	“reproductive-medicine”,
-	“pediatric-intensive-care”
+	"reproductive-medicine",
+	"pediatric-intensive-care"
     ]
   },
   {
@@ -344,9 +344,9 @@
       "ENT",
       "psychiatry",
       "trauma", 
-	“orthopedics”,
-	“joint-replacement”,
-	“general-surgery”
+	"orthopedics",
+	"joint-replacement",
+	"general-surgery"
     ]
   },
   {
@@ -364,8 +364,8 @@
       "ophthalmology",
       "neurology",
       "gynecology",
-	“burn-care”, 
-	“reconstructive-surgery”
+	"burn-care", 
+	"reconstructive-surgery"
     ]
   },
   {
@@ -383,10 +383,10 @@
       "ophthalmology",
       "psychiatry",
       "trauma", 
-	“pulmonology”,
-	“general-surgery”,
-	“internal-medicine”, 
-	“ENT”
+	"pulmonology",
+	"general-surgery",
+	"internal-medicine", 
+	"ENT"
     ]
   },
   {
@@ -402,13 +402,13 @@
       "pediatrics",
       "orthopedics",
       "ophthalmology", 
-	internal-medicine”,
-	“cardiology”,
-	“neurology”,
-	“general-surgery”,
-	“gynecology”,
-	“oncology”,
-	“ENT”
+	"internal-medicine",
+	"cardiology",
+	"neurology",
+	"general-surgery",
+	"gynecology",
+	"oncology",
+	"ENT"
     ]
   },
 {
