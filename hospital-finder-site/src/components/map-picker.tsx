@@ -1,17 +1,17 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { BaseMap, LatLng } from "@/components/base-map";
+import { BaseMap, MapPoint } from "@/components/base-map";
 
 type MapPickerProps = {
-    position: LatLng | null;
+    position: MapPoint | null;
     searchQuery: string;
-    onLocationChange: (pos: LatLng, inBucharest: boolean) => void;
+    onLocationChange: (pos: MapPoint, inBucharest: boolean) => void;
     onAddressFromMap: (address: string) => void;
 };
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
-const BUCHAREST: LatLng = { lat: 44.4268, lng: 26.1025 };
+const BUCHAREST: MapPoint = { lat: 44.4268, lng: 26.1025 };
 const GEOCODING_URL = "https://api.mapbox.com/search/geocode/v6";
 
 type GeocodeFeature = {
@@ -28,6 +28,7 @@ function normalize(s: string) {
     return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+// Bucharest can show up as the region, the place, or a district, depending on the result
 function isInBucharest(feature: GeocodeFeature | undefined) {
     const ctx = feature?.properties.context;
     if (!ctx) return false;
@@ -49,7 +50,7 @@ async function forwardGeocode(query: string, signal: AbortSignal): Promise<Geoco
         country: "ro",
         language: "en",
         limit: "1",
-        proximity: `${BUCHAREST.lng},${BUCHAREST.lat}`,
+        proximity: `${BUCHAREST.lng},${BUCHAREST.lat}`, // bias towards Bucharest, don't hard-restrict
     });
     const res = await fetch(`${GEOCODING_URL}/forward?${params}`, { signal });
     if (!res.ok) throw new Error("Geocoding failed");
@@ -57,7 +58,7 @@ async function forwardGeocode(query: string, signal: AbortSignal): Promise<Geoco
     return data.features[0];
 }
 
-async function reverseGeocode({ lat, lng }: LatLng): Promise<GeocodeFeature | undefined> {
+async function reverseGeocode({ lat, lng }: MapPoint): Promise<GeocodeFeature | undefined> {
     const params = new URLSearchParams({
         longitude: String(lng),
         latitude: String(lat),
@@ -72,7 +73,7 @@ async function reverseGeocode({ lat, lng }: LatLng): Promise<GeocodeFeature | un
 }
 
 export function MapPicker({ position, searchQuery, onLocationChange, onAddressFromMap }: MapPickerProps) {
-    const [focus, setFocus] = useState<LatLng | null>(null);
+    const [focus, setFocus] = useState<MapPoint | null>(null);
 
     // Typed address -> move the marker (debounced)
     useEffect(() => {
@@ -98,14 +99,15 @@ export function MapPicker({ position, searchQuery, onLocationChange, onAddressFr
     }, [searchQuery, onLocationChange]);
 
     // Map click -> reverse geocode, then move the marker + fill the address input
-    function handleMapClick(latLng: LatLng) {
-        reverseGeocode(latLng)
+    function handleMapClick(point: MapPoint) {
+        reverseGeocode(point)
             .then((feature) => {
-                onLocationChange(latLng, isInBucharest(feature));
+                onLocationChange(point, isInBucharest(feature));
                 onAddressFromMap(addressOf(feature));
             })
             .catch(() => {
-                onLocationChange(latLng, false);
+                // Couldn't resolve the point: treat it as outside Bucharest
+                onLocationChange(point, false);
                 onAddressFromMap("");
             });
     }

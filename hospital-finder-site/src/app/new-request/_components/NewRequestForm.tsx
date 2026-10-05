@@ -6,15 +6,42 @@ import { useCallback, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MapPicker } from "@/components/map-picker";
-
-type LatLng = { lat: number; lng: number };
+import type { MapPoint } from "@/components/base-map";
+import { toast } from "@/components/ui/toast";
 
 const MAX_NAME_LENGTH = 25; // must be strictly less than this
 
 const MSG_MISSING = "Please enter a valid address or click a point on the map.";
 const MSG_OUTSIDE = "The location must be inside Bucharest.";
 
-export default function NewRequestForm() {
+export type MedicalResult = {
+    status: string;           // anything other than "non-medical"
+    detected_specialty: string;
+    hospital: {
+        id: number,
+        name: string,
+        type: string
+    };
+    triage: string;
+};
+
+export type NonMedicalResult = {
+    status: "non-medical";
+    message: string;
+};
+
+export type AiResult = MedicalResult | NonMedicalResult;
+
+export function isNonMedical(r: AiResult): r is NonMedicalResult {
+    return r.status === "non-medical";
+}
+
+type Props = {
+    // patient = the exact point the user picked, for the ambulance map
+    setSuccessfulRequest: (data: AiResult, patient: MapPoint) => void;
+};
+
+export default function NewRequestForm({ setSuccessfulRequest }: Props) {
 
     const nameRef = useRef<HTMLInputElement>(null);
     const surnameRef = useRef<HTMLInputElement>(null);
@@ -31,10 +58,10 @@ export default function NewRequestForm() {
 
     const [address, setAddress] = useState("");           // what the input shows
     const [searchQuery, setSearchQuery] = useState("");   // only set when the user types
-    const [position, setPosition] = useState<LatLng | null>(null);
+    const [position, setPosition] = useState<MapPoint | null>(null);
     const [inBucharest, setInBucharest] = useState(false);
 
-    const handleLocationChange = useCallback((pos: LatLng, isInside: boolean) => {
+    const handleLocationChange = useCallback((pos: MapPoint, isInside: boolean) => {
         setPosition(pos);
         setInBucharest(isInside);
         setLocationError(isInside ? null : MSG_OUTSIDE);
@@ -51,7 +78,7 @@ export default function NewRequestForm() {
 
     function isPhoneValid(phone: string) {
         const phoneNumber = Number(phone);
-        if(phone.length == 0) return true;
+        if (phone.length == 0) return true;
         if (!isNaN(phoneNumber))
             return (phone.length == 10 && phone.charAt(0) == '0') ||
                 (phone.length <= 16 && phone.charAt(0) == '+');
@@ -90,22 +117,42 @@ export default function NewRequestForm() {
         else if (!inBucharest) locError = MSG_OUTSIDE;
         setLocationError(locError);
 
+        // `position === null` is redundant with locError, but narrows the type below
         if (
             !isValidSurname || !isValidName || !isValidAge ||
-            !isValidPhone || !isValidDescription || locError !== null
+            !isValidPhone || !isValidDescription || locError !== null || position === null
         ) return;
 
         const payload = {
-            surname: surnameValue.trim(),
-            name: nameValue.trim(),
-            age: ageValue,
-            phone: phoneValue,
-            description: descriptionValue,
-            address,
-            coordinates: position,
+            text: descriptionValue,
+            latitude: position.lat,
+            longitude: position.lng,
+            age: ageValue
         };
 
-        console.log(payload); // TODO: send to your API
+        const apiUrl = process.env.NEXT_PUBLIC_FLASK_API_URL;
+
+        async function sendRequest(): Promise<AiResult> {
+            const response = await fetch(`${apiUrl}/recommend`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            // throwing stops here, so an error body is never treated as a result
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+            const data: AiResult = await response.json();
+            setSuccessfulRequest(data, position!);
+            return data;
+        }
+
+        toast.promise(sendRequest(), {
+            loading: "Processing data…",
+            success: (data: AiResult) =>
+                isNonMedical(data) ? data.message : data.detected_specialty,
+            error: (e: unknown) => e instanceof Error ? e.message : "Something went wrong",
+        });
     }
 
     return (
