@@ -129,3 +129,36 @@
     @apply font-sans;
   }
 }
+
+/* Paste this at the END of src/app/globals.css (after the tailwind/shadcn imports). */
+
+/* Colors sampled directly from the reference screenshots */
+:root {
+  --hp-bg: #27364b;      /* page background */
+  --hp-ink: #010d26;     /* hamburger button */
+  --hp-map: #081b32;     /* map card while tiles load */
+  --hp-modal: #070d0d;   /* form pop-up */
+  --hp-field: #1c1f20;   /* inputs inside the pop-up */
+  --hp-accent: #193db8;  /* primary buttons */
+}
+
+/* Pop-up motion: a scrim fade plus a short rise-and-settle for the card */
+@keyframes hp-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hp-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes hp-pop-in {
+  from { opacity: 0; transform: translateY(1.5rem) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes hp-pop-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(0.75rem) scale(0.97); }
+}
+
+.hp-fade-in  { animation: hp-fade-in 0.25s ease-out both; }
+.hp-fade-out { animation: hp-fade-out 0.2s ease-in both; }
+.hp-pop-in   { animation: hp-pop-in 0.38s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hp-pop-out  { animation: hp-pop-out 0.2s ease-in both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hp-fade-in, .hp-fade-out, .hp-pop-in, .hp-pop-out { animation-duration: 0.01ms; }
+}
