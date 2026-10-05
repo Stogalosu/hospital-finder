@@ -37,9 +37,12 @@ export type BaseMapProps = {
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
 const DEFAULT_CENTER: MapPoint = { lat: 44.4268, lng: 26.1025 }; // Bucharest
+// Navy base with blue roads, the closest built-in match to the reference design.
+// Override with NEXT_PUBLIC_MAPBOX_STYLE to use a custom Mapbox Studio style.
 const DEFAULT_STYLE =
-    process.env.NEXT_PUBLIC_MAPBOX_STYLE ?? "mapbox://styles/mapbox/streets-v12";
+    process.env.NEXT_PUBLIC_MAPBOX_STYLE ?? "mapbox://styles/mapbox/navigation-night-v1";
 
+// White outline under every path so routes stay readable on a dark map
 const pathCasingLayer: LayerProps = {
     id: "paths-casing",
     type: "line",
@@ -62,16 +65,16 @@ const pathLayer: LayerProps = {
 };
 
 export function BaseMap({
-                            markers = [],
-                            paths = [],
-                            onClick,
-                            focus,
-                            fitBounds = false,
-                            center = DEFAULT_CENTER,
-                            zoom = 11,
-                            mapStyle = DEFAULT_STYLE,
-                            className = "h-100 w-full",
-                        }: BaseMapProps) {
+    markers = [],
+    paths = [],
+    onClick,
+    focus,
+    fitBounds = false,
+    center = DEFAULT_CENTER,
+    zoom = 11,
+    mapStyle = DEFAULT_STYLE,
+    className = "h-100 w-full",
+}: BaseMapProps) {
     const mapRef = useRef<MapRef>(null);
     const [loaded, setLoaded] = useState(false);
 
@@ -128,7 +131,8 @@ export function BaseMap({
                 mapboxAccessToken={TOKEN}
                 initialViewState={{ latitude: center.lat, longitude: center.lng, zoom }}
                 mapStyle={mapStyle}
-                style={{ width: "100%", height: "100%", aspectRatio: "square"}}
+                style={{ width: "100%", height: "100%" }}
+                cursor={onClick ? "crosshair" : undefined}
                 onLoad={() => setLoaded(true)}
                 onClick={handleClick}
             >
@@ -145,11 +149,16 @@ export function BaseMap({
                         latitude={m.position.lat}
                         longitude={m.position.lng}
                         color={m.color}
-                        onClick={(e) => {
-                            // don't let a marker click also count as a map click
-                            e.originalEvent.stopPropagation();
-                            m.onClick?.();
-                        }}
+                        // Only swallow the click when the marker is actually interactive,
+                        // otherwise clicks on or near a marker would never reach the map
+                        onClick={
+                            m.onClick
+                                ? (e) => {
+                                    e.originalEvent.stopPropagation();
+                                    m.onClick?.();
+                                }
+                                : undefined
+                        }
                     >
                         {m.element}
                     </Marker>

@@ -4,18 +4,32 @@ import { useEffect, useMemo, useState } from "react";
 import { BaseMap, MapMarker, MapPath, MapPoint } from "@/components/base-map";
 import { getFleet, dispatchAmbulance } from "@/lib/ambulance-sim";
 import { toLatLng, toMapPoint, routeToPath } from "@/lib/map-convert";
+import { cn } from "@/lib/utils";
+
+// When set, the map accepts clicks and shows the selected point (used behind the request form)
+export type PickingProps = {
+    position: MapPoint | null;
+    focus: MapPoint | null;
+    onPick: (point: MapPoint) => void;
+};
 
 type Props = {
     patient: MapPoint | null;
-    hospital: Hospital;
-    onResult?: (result: DispatchResult) => void;
+    hospital: Hospital | null;
+    picking?: PickingProps | null;
+    onResult?: (result: DispatchResult | null) => void;
+    className?: string;
 };
 
-const dot = (size: string, bg: string) => (
-    <div className={`${size} rounded-full border-2 border-white shadow ${bg}`} />
+// Pointer events off, so a click on a dot still reaches the map while picking a location
+const fleetDot = (
+    <div className="pointer-events-none size-6 rounded-full border-[3px] border-[#eef3f5] bg-[#727587]" />
+);
+const dispatchedDot = (
+    <div className="pointer-events-none size-7 rounded-full border-[3px] border-white bg-amber-400 shadow-[0_0_0_6px_rgba(251,191,36,0.28)]" />
 );
 
-export function AmbulanceMap({ patient, hospital, onResult }: Props) {
+export function AmbulanceMap({ patient, hospital, picking, onResult, className }: Props) {
     const [fleet, setFleet] = useState<Ambulance[]>([]);
     const [result, setResult] = useState<DispatchResult | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -33,8 +47,9 @@ export function AmbulanceMap({ patient, hospital, onResult }: Props) {
 
     // GET THE ROUTE: dispatch whenever the patient or hospital changes
     useEffect(() => {
-        if (!patient || fleet.length === 0) {
+        if (!patient || !hospital || fleet.length === 0) {
             setResult(null);
+            onResult?.(null);
             return;
         }
         let cancelled = false; // ignore stale responses
@@ -48,6 +63,7 @@ export function AmbulanceMap({ patient, hospital, onResult }: Props) {
             .catch((e) => {
                 if (cancelled) return;
                 setResult(null);
+                onResult?.(null);
                 setError(e instanceof Error ? e.message : "Dispatch failed");
             });
         return () => { cancelled = true; };
@@ -57,25 +73,20 @@ export function AmbulanceMap({ patient, hospital, onResult }: Props) {
     const markers = useMemo<MapMarker[]>(() => {
         const list: MapMarker[] = fleet
             .filter((a) => a.id !== result?.ambulanceId)
-            .map((a) => ({
-                id: `amb-${a.id}`,
-                position: toMapPoint(a),
-                element: dot("size-3", "bg-gray-500"),
-            }));
+            .map((a) => ({ id: `amb-${a.id}`, position: toMapPoint(a), element: fleetDot }));
 
-        if (result) {
-            list.push({
-                id: "dispatched",
-                position: toMapPoint(result.ambulancePosition),
-                element: dot("size-5", "bg-amber-500"),
-            });
+        if (result && hospital) {
+            list.push({ id: "dispatched", position: toMapPoint(result.ambulancePosition), element: dispatchedDot });
             list.push({ id: "patient", position: toMapPoint(result.patient), color: "#dc2626" });
             list.push({ id: "hospital", position: toMapPoint(hospital.coordinates), color: "#06b6d4" });
         }
+        if (picking?.position) {
+            list.push({ id: "selected", position: picking.position, color: "#dc2626" });
+        }
         return list;
-    }, [fleet, result, hospital]);
+    }, [fleet, result, hospital, picking?.position]);
 
-    // DISPLAY THE ROUTES
+    // DISPLAY THE ROUTES (bright colors, readable on the navy map)
     const toPatientPath = useMemo(() => (result ? routeToPath(result.toPatient) : []), [result]);
     const toHospitalPath = useMemo(() => (result ? routeToPath(result.toHospital) : []), [result]);
 
@@ -96,19 +107,22 @@ export function AmbulanceMap({ patient, hospital, onResult }: Props) {
     );
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className={cn("relative overflow-hidden rounded-[30px] bg-[var(--hp-map)]", className)}>
             <BaseMap
+                className="h-full w-full"
+                zoom={12}
                 markers={markers}
                 paths={paths}
                 fitBounds={fitPoints}
-                className="aspect-square w-full max-x-2xl"
+                focus={picking?.focus ?? null}
+                onClick={picking?.onPick}
             />
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            {result && (
-                <p className="text-sm">
-                    Ambulance #{result.ambulanceId}: {result.etaToPatientMin} min to patient
-                    ({result.distanceToPatientKm} km), then {result.etaToHospitalMin} min to{" "}
-                    {result.hospitalName} ({result.distanceToHospitalKm} km).
+            {error && (
+                <p
+                    role="alert"
+                    className="absolute bottom-4 right-4 max-w-xs rounded-2xl bg-[var(--hp-modal)]/90 px-4 py-2 text-sm text-red-400"
+                >
+                    {error}
                 </p>
             )}
         </div>

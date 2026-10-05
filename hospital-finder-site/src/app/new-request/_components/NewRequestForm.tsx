@@ -2,17 +2,14 @@
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { MapPicker } from "@/components/map-picker";
-import type { MapPoint } from "@/components/base-map";
 import { toast } from "@/components/ui/toast";
+import type { MapPoint } from "@/components/base-map";
+import type { LocationPicker } from "@/hooks/use-location-picker";
 
 const MAX_NAME_LENGTH = 25; // must be strictly less than this
-
-const MSG_MISSING = "Please enter a valid address or click a point on the map.";
-const MSG_OUTSIDE = "The location must be inside Bucharest.";
 
 export type MedicalResult = {
     status: string;           // anything other than "non-medical"
@@ -37,11 +34,20 @@ export function isNonMedical(r: AiResult): r is NonMedicalResult {
 }
 
 type Props = {
+    // The map (and its picker state) lives in the page, behind this pop-up
+    picker: LocationPicker;
     // patient = the exact point the user picked, for the ambulance map
     setSuccessfulRequest: (data: AiResult, patient: MapPoint) => void;
 };
 
-export default function NewRequestForm({ setSuccessfulRequest }: Props) {
+// Pill-shaped dark fields from the design
+const fieldClass =
+    "h-9 rounded-full border-0 bg-[var(--hp-field)] px-4 text-white shadow-none placeholder:text-white/40 " +
+    "focus-visible:ring-2 focus-visible:ring-white/70 aria-invalid:ring-2 aria-invalid:ring-red-400";
+const labelClass = "text-white";
+const errorClass = "text-sm text-red-400";
+
+export default function NewRequestForm({ picker, setSuccessfulRequest }: Props) {
 
     const nameRef = useRef<HTMLInputElement>(null);
     const surnameRef = useRef<HTMLInputElement>(null);
@@ -54,18 +60,7 @@ export default function NewRequestForm({ setSuccessfulRequest }: Props) {
     const [ageValid, setAgeValid] = useState(true);
     const [phoneValid, setPhoneValid] = useState(true);
     const [descriptionValid, setDescriptionValid] = useState(true);
-    const [locationError, setLocationError] = useState<string | null>(null);
-
-    const [address, setAddress] = useState("");           // what the input shows
-    const [searchQuery, setSearchQuery] = useState("");   // only set when the user types
-    const [position, setPosition] = useState<MapPoint | null>(null);
-    const [inBucharest, setInBucharest] = useState(false);
-
-    const handleLocationChange = useCallback((pos: MapPoint, isInside: boolean) => {
-        setPosition(pos);
-        setInBucharest(isInside);
-        setLocationError(isInside ? null : MSG_OUTSIDE);
-    }, []);
+    const [submitting, setSubmitting] = useState(false);
 
     function isNameValid(name: string) {
         const trimmed = name.trim();
@@ -112,15 +107,13 @@ export default function NewRequestForm({ setSuccessfulRequest }: Props) {
         const isValidDescription = isDescriptionValid(descriptionValue);
         setDescriptionValid(isValidDescription);
 
-        let locError: string | null = null;
-        if (position === null) locError = MSG_MISSING;
-        else if (!inBucharest) locError = MSG_OUTSIDE;
-        setLocationError(locError);
+        const locError = picker.validate();
+        const position = picker.position;
 
-        // `position === null` is redundant with locError, but narrows the type below
+        // `!position` is redundant with locError, but narrows the type below
         if (
             !isValidSurname || !isValidName || !isValidAge ||
-            !isValidPhone || !isValidDescription || locError !== null || position === null
+            !isValidPhone || !isValidDescription || locError !== null || !position
         ) return;
 
         const payload = {
@@ -147,7 +140,11 @@ export default function NewRequestForm({ setSuccessfulRequest }: Props) {
             return data;
         }
 
-        toast.promise(sendRequest(), {
+        const request = sendRequest();
+        setSubmitting(true);
+        request.catch(() => { /* the toast reports it */ }).finally(() => setSubmitting(false));
+
+        toast.promise(request, {
             loading: "Processing data…",
             success: (data: AiResult) =>
                 isNonMedical(data) ? data.message : data.detected_specialty,
@@ -157,115 +154,110 @@ export default function NewRequestForm({ setSuccessfulRequest }: Props) {
 
     return (
         <form onSubmit={onSubmit} className="w-full">
-            <div className="flex flex-row w-full justify-center gap-[10%]">
-                <MapPicker
-                    position={position}
-                    searchQuery={searchQuery}
-                    onLocationChange={handleLocationChange}
-                    onAddressFromMap={setAddress} // does NOT touch searchQuery
-                />
-                <FieldGroup className="w-full max-w-sm">
-                    <div className="flex flex-row gap-8">
-                        <Field data-invalid={!surnameValid ? "true" : "false"}>
-                            <FieldLabel htmlFor="surname">Surname</FieldLabel>
-                            <Input
-                                id="surname"
-                                name="surname"
-                                type="text"
-                                placeholder="Popescu"
-                                ref={surnameRef}
-                                required
-                                aria-invalid={!surnameValid ? "true" : "false"}
-                            />
-                            {!surnameValid && (
-                                <p className="text-sm text-destructive">
-                                    Must be under {MAX_NAME_LENGTH} characters.
-                                </p>
-                            )}
-                        </Field>
-                        <Field data-invalid={!nameValid ? "true" : "false"}>
-                            <FieldLabel htmlFor="name">First name</FieldLabel>
-                            <Input
-                                id="name"
-                                name="name"
-                                type="text"
-                                placeholder="Ion"
-                                ref={nameRef}
-                                required
-                                aria-invalid={!nameValid ? "true" : "false"}
-                            />
-                            {!nameValid && (
-                                <p className="text-sm text-destructive">
-                                    Must be under {MAX_NAME_LENGTH} characters.
-                                </p>
-                            )}
-                        </Field>
-                    </div>
-                    <Field data-invalid={!ageValid ? "true" : "false"}>
-                        <FieldLabel htmlFor="age">Age</FieldLabel>
+            <FieldGroup className="mx-auto w-full max-w-[26.5rem]">
+                <div className="flex flex-row gap-8">
+                    <Field data-invalid={!surnameValid ? "true" : "false"}>
+                        <FieldLabel htmlFor="surname" className={labelClass}>Surname</FieldLabel>
                         <Input
-                            id="age"
-                            name="age"
-                            type="number"
-                            placeholder="18"
-                            ref={ageRef}
-                            required
-                            aria-invalid={!ageValid ? "true" : "false"}
-                        />
-                    </Field>
-                    <Field data-invalid={!phoneValid ? "true" : "false"}>
-                        <FieldLabel htmlFor="phone">Phone number</FieldLabel>
-                        <Input
-                            id="phone"
-                            name="phone"
+                            id="surname"
+                            name="surname"
                             type="text"
-                            placeholder="07xxxxxxxx"
-                            ref={phoneRef}
-                            aria-invalid={!phoneValid ? "true" : "false"}
-                        />
-                    </Field>
-                    <Field data-invalid={!descriptionValid ? "true" : "false"}>
-                        <FieldLabel htmlFor="description">Describe your symptoms:</FieldLabel>
-                        <Textarea
-                            id="description"
-                            name="description"
-                            placeholder="What's wrong?"
-                            ref={descriptionRef}
+                            placeholder="Popescu"
+                            ref={surnameRef}
+                            className={fieldClass}
+                            autoFocus
                             required
-                            aria-invalid={!descriptionValid ? "true" : "false"}
-                            rows={10}
+                            aria-invalid={!surnameValid ? "true" : "false"}
                         />
-                    </Field>
-                    <Field data-invalid={locationError ? "true" : "false"}>
-                        <FieldLabel htmlFor="address">Address</FieldLabel>
-                        <Input
-                            id="address"
-                            name="address"
-                            type="text"
-                            placeholder="Str. Ion Mincu nr 10"
-                            value={address}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setAddress(e.currentTarget.value);
-                                setSearchQuery(e.currentTarget.value); // triggers forward geocoding
-                            }}
-                            required
-                            aria-invalid={locationError ? "true" : "false"}
-                        />
-                        {locationError && (
-                            <p className="text-sm text-destructive">{locationError}</p>
+                        {!surnameValid && (
+                            <p className={errorClass}>Must be under {MAX_NAME_LENGTH} characters.</p>
                         )}
                     </Field>
-                    <Field className="self-center w-25 pt-6">
-                        <Button
-                            type="submit"
-                            variant="default"
-                            disabled={position !== null && !inBucharest}
-                        >
-                            Submit
-                        </Button>
+                    <Field data-invalid={!nameValid ? "true" : "false"}>
+                        <FieldLabel htmlFor="name" className={labelClass}>First name</FieldLabel>
+                        <Input
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Ion"
+                            ref={nameRef}
+                            className={fieldClass}
+                            required
+                            aria-invalid={!nameValid ? "true" : "false"}
+                        />
+                        {!nameValid && (
+                            <p className={errorClass}>Must be under {MAX_NAME_LENGTH} characters.</p>
+                        )}
                     </Field>
-                </FieldGroup>
-            </div>
+                </div>
+                <Field data-invalid={!ageValid ? "true" : "false"}>
+                    <FieldLabel htmlFor="age" className={labelClass}>Age</FieldLabel>
+                    <Input
+                        id="age"
+                        name="age"
+                        type="number"
+                        placeholder="18"
+                        ref={ageRef}
+                        className={fieldClass}
+                        required
+                        aria-invalid={!ageValid ? "true" : "false"}
+                    />
+                </Field>
+                <Field data-invalid={!phoneValid ? "true" : "false"}>
+                    <FieldLabel htmlFor="phone" className={labelClass}>Phone number</FieldLabel>
+                    <Input
+                        id="phone"
+                        name="phone"
+                        type="text"
+                        placeholder="07xxxxxxxx"
+                        ref={phoneRef}
+                        className={fieldClass}
+                        aria-invalid={!phoneValid ? "true" : "false"}
+                    />
+                </Field>
+                <Field data-invalid={!descriptionValid ? "true" : "false"}>
+                    <FieldLabel htmlFor="description" className={labelClass}>Describe your symptoms:</FieldLabel>
+                    <Textarea
+                        id="description"
+                        name="description"
+                        placeholder="What's wrong?"
+                        ref={descriptionRef}
+                        className={`${fieldClass} min-h-[4.5rem] rounded-[1.4rem] py-3`}
+                        required
+                        aria-invalid={!descriptionValid ? "true" : "false"}
+                        rows={3}
+                    />
+                </Field>
+                <Field data-invalid={picker.locationError ? "true" : "false"}>
+                    <FieldLabel htmlFor="address" className={labelClass}>Address</FieldLabel>
+                    <Input
+                        id="address"
+                        name="address"
+                        type="text"
+                        placeholder="Str. Ion Mincu nr 10"
+                        value={picker.address}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            picker.onAddressInput(e.currentTarget.value)
+                        }
+                        className={fieldClass}
+                        required
+                        aria-invalid={picker.locationError ? "true" : "false"}
+                    />
+                    {picker.locationError && (
+                        <p className={errorClass}>{picker.locationError}</p>
+                    )}
+                </Field>
+                <Field className="w-auto self-center pt-6">
+                    <Button
+                        type="submit"
+                        variant="default"
+                        className="h-9 rounded-full bg-[var(--hp-accent)] px-8 text-white hover:bg-[#2249d6] disabled:opacity-50"
+                        disabled={submitting || (picker.position !== null && !picker.inBucharest)}
+                    >
+                        Submit
+                    </Button>
+                </Field>
+            </FieldGroup>
         </form>
     );
 }
