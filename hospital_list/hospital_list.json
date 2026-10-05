@@ -1,0 +1,430 @@
+[
+  {
+    "id": 1,
+    "name": "Spitalul Clinic de Urgență Floreasca",
+    "address":"Calea Floreasca 8, 014461 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.453889,
+      "longitude": 26.101683
+    },
+    "specialties": [
+      "gastroenterology",
+      "dermatology",
+      "cardiology",
+      "oncology",
+      "emergency-medicine",
+      "general-surgery",
+      "orthopedics",
+      "cardiology",
+      "intensive-care",
+      "neurology"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Spitalul Universitar de Urgență Militar Central Dr. Carol Davila",
+    "address":"Calea Plevnei 134, 010825 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.442705,
+      "longitude": 26.073543
+    },
+    "specialties": [
+      "gastroenterology",
+      "psychiatry",
+      "ophthalmology",
+      "orthopedics",
+	"general-surgery",
+	"cardiology",
+	"oncology",
+	"neurology",
+	"urology",
+	"intensive care"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Spitalul Clinic Dr. I. Cantacuzino",
+    "address":"Strada Ion Movilă 5-7, 030167 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.444881,
+      "longitude": 26.109866
+    },
+    "specialties": [
+      "gynecology",
+      "pneumology",
+      "ENT",
+	"general-surgery",
+	"neonatology",
+	"internal-medicine",
+	"rheumatology",
+	"intensive-care",
+	"oncology"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Spitalul Clinic Colentina",
+    "address":"Șoseaua Ștefan cel Mare 19-21, 020125 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.453649,
+      "longitude": 26.113952
+    },
+    "specialties": [
+      "psychiatry",
+      "orthopedics",
+      "neurology",
+      "trauma",
+	"dermatology", 
+	"neurosurgery",
+	"rheumatology",
+	"internal-medicine",
+	"gastroenterology",
+	"infectious-diseases",
+	"pediatric-dermatology",
+	"pediatrics"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Spitalul Clinic Filantropia",
+    "address":"Bulevardul Ion Mihalache 11- 13, 011132 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.453157,
+      "longitude": 26.082320
+    },
+    "specialties": [
+      "trauma",
+      "dermatology",
+      "gastroenterology",
+	"obstretics",
+	"gynecology",
+	"maternal-fetal-medicine",
+	"neontology"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Spitalul Clinic de Nefrologie Dr. Carol Davila",
+    "address":"Calea Griviței 4, 010731 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.444665,
+      "longitude": 26.089776
+    },
+    "specialties": [
+      "trauma",
+      "ophthalmology",
+      "dermatology",
+      "pneumology",
+      "cardiology",
+	"nephrology",
+	"dialysis",
+	"renal-surgery",
+	"urology",
+    "internal-medicine"
+   ]
+  },
+  {
+    "id": 7,
+    "name": "Spitalul Clinic de Copii Dr. Victor Gomoiu",
+    "address":"Bulevardul Basarabia 21, 022102 București",
+    "type":"peidatric_only",
+    "coordinates": {
+      "latitude": 44.433041,
+      "longitude": 26.142245
+    },
+    "specialties": [
+      "pediatric-orthopedics",
+      "pediatric-gynecology",
+	"pediatric-surgery",
+	"pediatric-neurology",
+	"pediatric-cardiology",
+	"pediatrics",
+	"pediatric-ENT",
+	"neonatology"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Spitalul Clinic de Urgență pentru Copii Grigore Alexandrescu",
+    "address":"Bulevardul Iancu de Hunedoara 30-32, 011743 București",
+    "type":"pediatric_only",
+    "coordinates": {
+      "latitude": 44.452309,
+      "longitude": 26.092762
+    },
+    "specialties": [
+      "pediatric-orthopedics",
+      "pediatric-gastroenterology",
+      "pediatric-urology",
+      "pediatric-psychiatry",
+      "pediatric-gynecology",
+	"pediatric-emergency-medicine",
+	"pediatric-surgery",
+	"pediatric-toxicology",
+	"pediatric-cardiology",
+	"pediatric-reconstructive-surgery"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Spitalul Clinic de Boli Infecțioase și Tropicale Dr. Victor Babeș",
+    "address":"Șoseaua Mihai Bravu 281, 030303 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.427742,
+      "longitude": 26.139289
+    },
+    "specialties": [
+      "pneumology",
+      "oncology",
+      "gastroenterology",
+	"infectious-diseases",
+	"tropical-diseases",
+	"intensive-care",
+	"pediatric-infectious-patology"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Institutul Clinic Fundeni",
+    "address":"Fundeni Road No. 258, București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.465528,
+      "longitude": 26.156013
+    },
+    "specialties": [
+      "oncology",
+      "dermatology",
+      "radiology",
+	"pediatric-gastroenterology",
+	"hepatology",
+	"pediatric-hematology",
+	"nephrology",
+	"kidney-transplation",
+	"urology",
+	"pediatrics",
+	"general-surgery",
+	"cardiology"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Institutul Național de Boli Infecțioase Prof. Dr. Matei Balș",
+    "address":"Strada Doctor Calistrat Grozovici 1, 021105 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.455322,
+      "longitude": 26.112561
+    },
+    "specialties": [
+      "pneumology",
+      "gastroenterology",
+      "orthopedics",
+	"infectious-diseases",
+	"pediatric-infectious-diseases",
+	"intensive-care",
+	"pediatric-intensive-care",
+	"antirabic-center"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Spitalul Clinic Căilor Ferate Witting",
+    "address":"Calea Plevnei 142-144, 010243 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.442764,
+      "longitude": 26.071940
+    },
+    "specialties": [
+      "urology",
+      "radiology",
+	"internal-medicine",
+	"general-surgery",
+	"ophthalmology",
+	"neurology",
+	"otolaryngology",
+	"dermatology",
+	"gynecology"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Spitalul Clinic de Psihiatrie Prof. Dr. Alexandru Obregia",
+    "address":"Șoseaua Berceni 10, 041914 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.387372,
+      "longitude": 26.127129
+    },
+    "specialties": [
+      "trauma",
+      "cardiology",
+	"adult-psychiatry",
+	"pediatric-psychiatry",
+	"pediatric-neurology",
+	"addiction-recovery"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Spitalul Clinic Nicolae Malaxa",
+    "address":"Șoseaua Vergului.12 sector 2, cod, Șos. Vergului 12, 022441 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.438381,
+      "longitude": 26.178727
+    },
+    "specialties": [
+      "pediatrics",
+      "trauma",
+	"metabolic-diseases",
+	"general-surgery",
+	"gynecology",
+	"neonatology",
+	"internal-medicine",
+	"pediatric-stomatology"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Spitalul Clinic Theodor Burghele",
+    "address":"Șoseaua Panduri 20, 061344 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.425702,
+      "longitude": 26.072934
+    },
+    "specialties": [
+      "pneumology",
+      "gynecology",
+      "urology",
+      "orthopedics",
+      "radiology",
+	"nephrology",
+	"cardiology",
+	"internal-medicine",
+	"intensive-care"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Spitalul Clinic Panait Sîrbu",
+    "address":"Strada Boișoara, 060251 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.449863,
+      "longitude": 26.060186
+    },
+    "specialties": [
+      "gynecology",
+      "neonatology",
+	"reproductive-medicine",
+	"pediatric-intensive-care"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Spitalul Clinic de Ortopedie Foisor",
+    "address":"Bulevardul Ferdinand I 35-37, 030167 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.440837,
+      "longitude": 26.121029
+    },
+    "specialties": [
+      "dermatology",
+      "ENT",
+      "psychiatry",
+      "trauma", 
+	"orthopedics",
+	"joint-replacement",
+	"general-surgery"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Spitalul Clinic de Urgență Chirurgie Plastică și Arsuri",
+    "address":"Calea Griviței 218, 010713 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.463843,
+      "longitude": 26.055979
+    },
+    "specialties": [
+      "oncology",
+      "orthopedics",
+      "ophthalmology",
+      "neurology",
+      "gynecology",
+	"burn-care", 
+	"reconstructive-surgery"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Spitalul Clinic Sf. Maria",
+    "address":"Bulevardul Ion Mihalache 37-39, 011172 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.456345,
+      "longitude": 26.078845
+    },
+    "specialties": [
+      "pediatrics",
+      "urology",
+      "ophthalmology",
+      "psychiatry",
+      "trauma", 
+	"pulmonology",
+	"general-surgery",
+	"internal-medicine", 
+	"ENT"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Spitalul Universitar de Urgență Elias",
+    "address":"Bulevardul Mărăști 17, 011461 București",
+    "type":"mixed",
+    "coordinates": {
+      "latitude": 44.466269,
+      "longitude": 26.073767
+    },
+    "specialties": [
+      "pediatrics",
+      "orthopedics",
+      "ophthalmology", 
+	"internal-medicine",
+	"cardiology",
+	"neurology",
+	"general-surgery",
+	"gynecology",
+	"oncology",
+	"ENT"
+    ]
+  },
+{
+    "id": 21,
+    "name": "Spitalul de pneumoftiziologie Sfântul Ștefan",
+    "address":"Șoseaua Ștefan cel Mare 11, 020122 București",
+    "type":"adult_only",
+    "coordinates": {
+      "latitude": 44.453636,
+      "longitude": 26.105381
+    },
+    "specialties": [
+      "pneumology",
+      "phthisiology",
+      "bronchology"
+    ]
+  }
+  ]
+
